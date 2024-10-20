@@ -1,10 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:prj3/controllers/snack_bar_controller.dart';
 import 'package:prj3/controllers/user_controller.dart';
+import 'package:prj3/google_service.dart';
 import 'package:prj3/pages/home.dart';
 import 'package:get/get.dart';
+import 'package:prj3/utils/hot_message.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -14,38 +13,27 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleService _googleService = GoogleService();
   final UserController _userController = Get.find(); // Get the UserController
-  final MySnackbarController snackbarController = Get.find();
 
   @override
   void initState() {
     super.initState();
   }
 
-  Future<User?> _signInWithGoogle() async {
+  void _signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return null; // User canceled the sign-in
+      final user = await _googleService.signInWithGoogle();
+      if (user != null) {
+        // Sign-in successful
+        _userController.setUser(user);
+        print("Navigating to HomeScreen"); // Debugging statement
+        Get.to(() => HomeScreen());
+      } else {
+        print("User is null after sign-in"); // Debugging statement
       }
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-
-      return userCredential.user;
-    } catch (e) {
-      snackbarController.showSnackbar('Error', e.toString());
-      return null;
+    } catch (err) {
+      HotMessage.showToast('Error', err.toString());
     }
   }
 
@@ -73,17 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(
                   height: 20), // Adds space between the text and the button
               ElevatedButton(
-                onPressed: () async {
-                  final user = await _signInWithGoogle();
-                  if (user != null) {
-                    // Sign-in successful
-                    _userController.setUser(user);
-                    print("Navigating to HomeScreen"); // Debugging statement
-                    Get.to(() => HomeScreen());
-                  } else {
-                    print("User is null after sign-in"); // Debugging statement
-                  }
-                },
+                onPressed: _signInWithGoogle,
                 child: const Text('Sign in with Google'),
               ),
             ],

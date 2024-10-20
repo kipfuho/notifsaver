@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:prj3/widgets/snack_bar.dart';
 import '../controllers/notification_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -39,11 +38,6 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding:
-            const EdgeInsets.only(bottom: 16.0), // Padding for the snackbar
-        child: SnackbarWidget(),
       ),
     );
   }
