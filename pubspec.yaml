@@ -45,6 +45,7 @@ dependencies:
   workmanager: ^0.5.2
   path_provider: ^2.1.4
   googleapis: ^13.2.0
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:

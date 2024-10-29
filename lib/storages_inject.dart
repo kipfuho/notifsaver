@@ -1,21 +1,51 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:prj3/platform_channel.dart';
+import 'dart:convert';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    // Perform background task: Listen to notifications, save to Hive, etc.
-    var box = await Hive.openBox('notificationsBox');
-    box.add('New background notification at ${DateTime.now()}');
-    print("Background Task executed: $task");
+    try {
+      // Call Android to retrieve unprocessed notifications
+      final List<dynamic> unprocessedNotifications =
+          await PlatformChannels.getUnprocessedNotificationsFromTempStorage();
+
+      // if (unprocessedNotifications.isEmpty) {
+      //   return Future.value(true);
+      // }
+
+      // Get the directory for storing Hive data
+      if (!Hive.isBoxOpen('notificationsBox')) {
+        var appDir = await getApplicationDocumentsDirectory();
+        Hive.init(appDir.path);
+      }
+      var box = await Hive.openBox('notificationsBox');
+      for (String notificationJson in unprocessedNotifications) {
+        var notification = jsonDecode(notificationJson);
+        await box.add(notification);
+
+        // Call Android to remove notification from temp storage after saving
+        await PlatformChannels.removeNotificationFromTempStorage(
+            notification['notificationId']);
+      }
+
+      print("Background Task executed: $task");
+    } catch (e) {
+      print("Error in background task: $e");
+    }
+
     return Future.value(true);
   });
 }
 
 class StorageManagementInjection {
   // Method to initialize all controllers and other dependencies
-  static void init() async {
+  static Future<void> init() async {
     // Initialize Hive
     await Hive.initFlutter();
+    var appDir = await getApplicationDocumentsDirectory();
+    print(appDir);
     // Open a box to store notifications
     await Hive.openBox('notificationsBox');
 

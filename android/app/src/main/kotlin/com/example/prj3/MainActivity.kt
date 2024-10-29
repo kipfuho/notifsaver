@@ -5,6 +5,14 @@ import android.content.Intent
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import android.graphics.drawable.Drawable
+import android.content.pm.PackageManager
+import android.content.pm.ApplicationInfo
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.util.Base64
+import java.io.ByteArrayOutputStream
+import android.util.Log
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.example.notifsaver/notifications"
@@ -15,11 +23,30 @@ class MainActivity: FlutterActivity() {
 
         // Safely unwrapping the binaryMessenger
         MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "openNotificationSettings") {
-                openNotificationSettings()
-                result.success("Opened Notification Settings")
-            } else {
-                result.notImplemented()
+            when (call.method) {
+                "openNotificationSettings" -> {
+                    openNotificationSettings()
+                    result.success("Opened Notification Settings")
+                }
+                "getUnprocessedNotificationsFromTempStorage" -> {
+                    val unprocessedNotifications = SharedPrefManager.getUnprocessedNotifications(this)
+                    result.success(unprocessedNotifications)
+                }
+                "removeNotificationFromTempStorage" -> {
+                    val notificationId = call.argument<String>("notificationId")
+                    notificationId?.let { SharedPrefManager.removeNotification(this, it) }
+                    result.success(null)
+                }
+                "getAppIcon" -> {
+                    val packageName = call.arguments as String
+                    val icon = getAppIcon(packageName)
+                    if (icon != null) {
+                        result.success(icon)
+                    } else {
+                        result.error("UNAVAILABLE", "App icon not available.", null)
+                    }
+                }
+                else -> result.notImplemented()
             }
         }
 
@@ -41,5 +68,36 @@ class MainActivity: FlutterActivity() {
     private fun openNotificationSettings() {
         val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
         startActivity(intent)
+    }
+
+    private fun getAppIcon(packageName: String): String? {
+        return try {
+            // Get ApplicationInfo for the specified package
+            val appInfo: ApplicationInfo = this.packageManager.getApplicationInfo(packageName, 0)
+            
+            // Get the app icon as a Drawable
+            val icon: Drawable = this.packageManager.getApplicationIcon(appInfo)
+            
+            // Check if the icon is a BitmapDrawable and convert it to Bitmap
+            val bitmap = if (icon is BitmapDrawable) {
+                icon.bitmap
+            } else {
+                Log.e("getAppIcon", "Icon is not a BitmapDrawable: ${icon.javaClass.simpleName}")
+                return null // Return null if the icon cannot be processed
+            }
+    
+            // Convert Bitmap to Base64 String
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            
+            Base64.encodeToString(byteArray, Base64.NO_WRAP)
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e("getAppIcon", "Application not found: ${e.message}")
+            null
+        } catch (e: Exception) {
+            Log.e("getAppIcon", "Error retrieving app icon: ${e.message}", e)
+            null
+        }
     }
 }

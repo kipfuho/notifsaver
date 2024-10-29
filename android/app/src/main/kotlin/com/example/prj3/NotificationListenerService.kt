@@ -5,6 +5,7 @@ import android.service.notification.StatusBarNotification
 import android.util.Log
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import org.json.JSONObject
 
 class NotificationListener : NotificationListenerService() {
     private var result: MethodChannel.Result? = null
@@ -14,7 +15,6 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val packageName = sbn.packageName
-        val notificationId = sbn.id
         val tag = sbn.tag ?: "No tag"
         val postTime = sbn.postTime
         val notification = sbn.notification
@@ -29,47 +29,40 @@ class NotificationListener : NotificationListenerService() {
         val tickerText = notification.tickerText?.toString() ?: "No TickerText"
         val notificationPriority = notification.priority
         val notificationChannelId = notification.channelId
+        val notificationId = "${packageName}#${sbn.id}#$postTime"
 
-        // Log all the notification data
-        Log.i("NotificationListener", """
-            Notification posted from: $packageName
-            Notification ID: $notificationId
-            Tag: $tag
-            Post Time: $postTime
-            Title: $title
-            Text: $text
-            SubText: $subText
-            BigText: $bigText
-            Category: $category
-            TickerText: $tickerText
-            Priority: $notificationPriority
-            Channel ID: $notificationChannelId
-        """)
 
-        // Send all the data to Flutter via EventChannel
-        val notificationDetails = """
-            Package: $packageName
-            ID: $notificationId
-            Tag: $tag
-            Post Time: $postTime
-            Title: $title
-            Text: $text
-            SubText: $subText
-            BigText: $bigText
-            Category: $category
-            TickerText: $tickerText
-            Priority: $notificationPriority
-            Channel ID: $notificationChannelId
-        """.trimIndent()
+        // Create JSON object with all the notification details
+        val notificationDetails = JSONObject().apply {
+            put("packageName", packageName)
+            put("notificationId", notificationId)
+            put("tag", tag)
+            put("postTime", postTime)
+            put("title", title)
+            put("text", text)
+            put("subText", subText)
+            put("bigText", bigText)
+            put("category", category)
+            put("tickerText", tickerText)
+            put("priority", notificationPriority)
+            put("channelId", notificationChannelId)
+        }
 
-        eventSink?.success(notificationDetails)
+        // Log JSON data for debugging
+        Log.i("NotificationListener", "Notification posted: $notificationDetails")
+
+        // Save notification to temporary storage
+        SharedPrefManager.addNotification(this, notificationDetails)
+
+        // Send JSON data to Flutter via EventChannel
+        eventSink?.success(notificationDetails.toString())
     }
 
-    override fun onNotificationRemoved(sbn: StatusBarNotification) {
-        Log.i("NotificationListener", "Notification removed from: ${sbn.packageName}")
+    fun removeNotificationFromTempStorage(notificationId: String) {
+        SharedPrefManager.removeNotification(this, notificationId)
     }
 
-    fun setEventSink(eventSink: EventChannel.EventSink) {
-        NotificationListener.eventSink = eventSink
+    fun getUnprocessedNotificationsFromTempStorage(): List<String> {
+        return SharedPrefManager.getUnprocessedNotifications(this)
     }
 }

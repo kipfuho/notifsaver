@@ -14,7 +14,7 @@ void main() async {
   );
   
   // Inject Storage management
-  StorageManagementInjection.init();
+  await StorageManagementInjection.init();
 
   // Inject states management
   StateManagementInjection.init();
