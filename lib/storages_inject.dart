@@ -1,5 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:prj3/constant.dart';
+import 'package:prj3/models/log_model.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:prj3/platform_channel.dart';
 import 'dart:convert';
@@ -11,28 +13,29 @@ void callbackDispatcher() {
       final List<dynamic> unprocessedNotifications =
           await PlatformChannels.getUnprocessedNotificationsFromTempStorage();
 
-      // if (unprocessedNotifications.isEmpty) {
-      //   return Future.value(true);
-      // }
+      if (unprocessedNotifications.isEmpty) {
+        return Future.value(true);
+      }
 
       // Get the directory for storing Hive data
-      if (!Hive.isBoxOpen('notificationsBox')) {
+      if (!Hive.isBoxOpen(AppConstants.unreadNotifications)) {
         var appDir = await getApplicationDocumentsDirectory();
         Hive.init(appDir.path);
       }
-      var box = await Hive.openBox('notificationsBox');
+      var notificationBox =
+          await Hive.openBox(AppConstants.unreadNotifications);
       for (String notificationJson in unprocessedNotifications) {
         var notification = jsonDecode(notificationJson);
-        await box.add(notification);
+        await notificationBox.add(notification);
 
         // Call Android to remove notification from temp storage after saving
         await PlatformChannels.removeNotificationFromTempStorage(
             notification['notificationId']);
       }
-
-      print("Background Task executed: $task");
+      await notificationBox.close();
+      await LogModel.addLog(AppConstants.logInfo, "Background Task executed: $task");
     } catch (e) {
-      print("Error in background task: $e");
+      await LogModel.addLog(AppConstants.logError, "Error in background task: $e");
     }
 
     return Future.value(true);
@@ -44,10 +47,6 @@ class StorageManagementInjection {
   static Future<void> init() async {
     // Initialize Hive
     await Hive.initFlutter();
-    var appDir = await getApplicationDocumentsDirectory();
-    print(appDir);
-    // Open a box to store notifications
-    await Hive.openBox('notificationsBox');
 
     // Initialize WorkManager
     Workmanager().initialize(callbackDispatcher, isInDebugMode: true);

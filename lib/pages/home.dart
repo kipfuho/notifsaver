@@ -1,17 +1,29 @@
-import 'package:prj3/controllers/notification_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:prj3/widgets/notification_icon.dart';
+import 'package:prj3/controllers/notification_controller.dart';
 import 'package:prj3/widgets/notification_list.dart';
-import 'package:prj3/widgets/test_widget.dart';
+import 'package:prj3/constant.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  // Use GetX to find the NotificationController
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final NotificationController notificationController = Get.find();
+  int _selectedIndex = 0; // Track the selected tab
 
+  // Define the different pages for the BottomNavigationBar
+  final List<Widget> _pages = [
+    const NotificationList(notificationType: AppConstants.unreadNotifications),
+    const NotificationList(notificationType: AppConstants.readNotifications),
+    const NotificationList(notificationType: AppConstants.savedNotifications),
+  ];
+
+  // Method to print all Hive data
   Future<void> printHiveData() async {
     var box = await Hive.openBox('notificationsBox');
     var keys = box.keys;
@@ -22,12 +34,17 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
+  // Method to delete the Hive box
   Future<void> deleteHiveBox() async {
-    // Open the box (if not already opened)
     var box = await Hive.openBox('notificationsBox');
-
-    // Delete the box from disk
     await box.deleteFromDisk();
+  }
+
+  // Handle BottomNavigationBar item taps
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -44,65 +61,44 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Use Obx to listen to notificationData updates
-            Obx(() => Text(
-                'Notification Data: ${notificationController.notificationData}')),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                notificationController.openNotificationSettings();
-              },
-              child: const Text('Open Notification Settings'),
-            ),
-            const NotificationList(),
-            const SizedBox(height: 20),
-            // Button to print Hive data
-            ElevatedButton(
-              onPressed: () {
-                printHiveData();
-              },
-              child: const Text('Print Hive Data'),
-            ),
-            const SizedBox(height: 20),
-            // Button to print Hive data
-            ElevatedButton(
-              onPressed: () {
-                deleteHiveBox();
-              },
-              child: const Text('Delete Hive Data'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle Unread button press
-                    },
-                    child: Text('Unread'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle Read button press
-                    },
-                    child: Text('Read'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle Saved button press
-                    },
-                    child: Text('Saved'),
-                  ),
-                ],
+      body: Column(
+        children: [
+          Obx(() => Text(
+              'Notification Data: ${notificationController.notificationData}')),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: printHiveData,
+                child: const Text('Print Hive Data'),
               ),
-            ),
-          ],
-        ),
+              ElevatedButton(
+                onPressed: deleteHiveBox,
+                child: const Text('Delete Hive Data'),
+              ),
+            ],
+          ),
+          Expanded(child: _pages[_selectedIndex]), // Display the selected page
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.markunread),
+            label: 'Unread',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.done),
+            label: 'Read',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.save),
+            label: 'Saved',
+          ),
+        ],
       ),
     );
   }

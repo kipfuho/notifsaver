@@ -9,7 +9,9 @@ import android.graphics.drawable.Drawable
 import android.content.pm.PackageManager
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.util.Base64
 import java.io.ByteArrayOutputStream
 import android.util.Log
@@ -74,19 +76,32 @@ class MainActivity: FlutterActivity() {
         return try {
             // Get ApplicationInfo for the specified package
             val appInfo: ApplicationInfo = this.packageManager.getApplicationInfo(packageName, 0)
-            
+
             // Get the app icon as a Drawable
             val icon: Drawable = this.packageManager.getApplicationIcon(appInfo)
-            
-            // Check if the icon is a BitmapDrawable and convert it to Bitmap
-            val bitmap = if (icon is BitmapDrawable) {
-                icon.bitmap
-            } else {
-                Log.e("getAppIcon", "Icon is not a BitmapDrawable: ${icon.javaClass.simpleName}")
-                return null // Return null if the icon cannot be processed
+
+            // Convert the Drawable to a Bitmap
+            val bitmap = when (icon) {
+                is BitmapDrawable -> icon.bitmap
+                is AdaptiveIconDrawable -> {
+                    // Create a Bitmap and draw the AdaptiveIconDrawable onto it
+                    val bitmap = Bitmap.createBitmap(
+                        icon.intrinsicWidth,
+                        icon.intrinsicHeight,
+                        Bitmap.Config.ARGB_8888
+                    )
+                    val canvas = Canvas(bitmap)
+                    icon.setBounds(0, 0, canvas.width, canvas.height)
+                    icon.draw(canvas)
+                    bitmap
+                }
+                else -> {
+                    Log.e("getAppIcon", "Icon is not a supported Drawable type: ${icon.javaClass.simpleName}")
+                    return null // Return null if the icon cannot be processed
+                }
             }
-    
-            // Convert Bitmap to Base64 String
+
+            // Convert Bitmap to Base64 String if bitmap is not null
             val byteArrayOutputStream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
             val byteArray = byteArrayOutputStream.toByteArray()
