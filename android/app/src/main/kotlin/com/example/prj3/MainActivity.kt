@@ -1,19 +1,19 @@
 package com.example.notifsaver
 
-import android.os.Bundle
-import android.content.Intent
 import io.flutter.embedding.android.FlutterActivity
-import io.flutter.plugin.common.EventChannel
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.BitmapDrawable
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.EventChannel
 import android.graphics.drawable.Drawable
-import android.content.pm.PackageManager
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import java.io.ByteArrayOutputStream
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.AdaptiveIconDrawable
+import android.content.Intent
 import android.util.Base64
-import java.io.ByteArrayOutputStream
+import android.os.Bundle
 import android.util.Log
 
 class MainActivity: FlutterActivity() {

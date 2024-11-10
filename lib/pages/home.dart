@@ -18,26 +18,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define the different pages for the BottomNavigationBar
   final List<Widget> _pages = [
-    const NotificationList(notificationType: AppConstants.unreadNotifications),
-    const NotificationList(notificationType: AppConstants.readNotifications),
-    const NotificationList(notificationType: AppConstants.savedNotifications),
+    const NotificationList(notificationType: 'unread'),
+    const NotificationList(notificationType: 'read'),
+    const NotificationList(notificationType: 'saved'),
   ];
 
   // Method to print all Hive data
   Future<void> printHiveData() async {
-    var box = await Hive.openBox('notificationsBox');
+    var box = await Hive.openBox(AppConstants.getHiveBoxName());
     var keys = box.keys;
 
     for (var key in keys) {
       var value = box.get(key);
       print('Key: $key, Value: $value');
     }
+
+    // await box.close();
   }
 
   // Method to delete the Hive box
   Future<void> deleteHiveBox() async {
-    var box = await Hive.openBox('notificationsBox');
+    var box = await Hive.openBox(AppConstants.getHiveBoxName());
     await box.deleteFromDisk();
+    // await box.close();
   }
 
   // Handle BottomNavigationBar item taps
@@ -79,7 +82,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          Expanded(child: _pages[_selectedIndex]), // Display the selected page
+          Expanded(
+            child: IndexedStack(
+              index: _selectedIndex,
+              children: _pages,
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

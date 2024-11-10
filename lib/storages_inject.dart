@@ -18,24 +18,25 @@ void callbackDispatcher() {
       }
 
       // Get the directory for storing Hive data
-      if (!Hive.isBoxOpen(AppConstants.unreadNotifications)) {
+      if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
         var appDir = await getApplicationDocumentsDirectory();
         Hive.init(appDir.path);
       }
-      var notificationBox =
-          await Hive.openBox(AppConstants.unreadNotifications);
+      var notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
       for (String notificationJson in unprocessedNotifications) {
         var notification = jsonDecode(notificationJson);
-        await notificationBox.add(notification);
+        await notificationBox.put(notification['notificationId'], notification);
 
         // Call Android to remove notification from temp storage after saving
         await PlatformChannels.removeNotificationFromTempStorage(
             notification['notificationId']);
       }
-      await notificationBox.close();
-      await LogModel.addLog(AppConstants.logInfo, "Background Task executed: $task");
+      // await notificationBox.close();
+      await LogModel.addLog(
+          AppConstants.logInfo, "Background Task executed: $task");
     } catch (e) {
-      await LogModel.addLog(AppConstants.logError, "Error in background task: $e");
+      await LogModel.addLog(
+          AppConstants.logError, "Error in background task: $e");
     }
 
     return Future.value(true);
@@ -45,13 +46,8 @@ void callbackDispatcher() {
 class StorageManagementInjection {
   // Method to initialize all controllers and other dependencies
   static Future<void> init() async {
-    // Initialize Hive
     await Hive.initFlutter();
-
-    // Initialize WorkManager
     Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-
-    // Register periodic background task (every 15 minutes)
     Workmanager().registerPeriodicTask(
       '1',
       'saveNotification',

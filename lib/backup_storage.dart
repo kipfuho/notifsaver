@@ -1,14 +1,15 @@
 import 'dart:io';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';  // For accessing local storage
-import 'dart:convert';  // For encoding/decoding JSON
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'package:prj3/constant.dart';
 
 class BackupService {
   // Method to export data from Hive to a JSON file
   Future<File?> exportHiveData() async {
     try {
       // Get the Hive box
-      var box = await Hive.openBox('notificationsBox');
+      var box = await Hive.openBox(AppConstants.getHiveBoxName());
 
       // Get the app's local directory (where the backup file will be saved)
       Directory appDocDir = await getApplicationDocumentsDirectory();

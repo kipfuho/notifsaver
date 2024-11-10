@@ -2,10 +2,11 @@ package com.example.notifsaver
 
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import android.util.Log
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.EventChannel
+import android.content.pm.PackageManager
 import org.json.JSONObject
+import android.util.Log
 
 class NotificationListener : NotificationListenerService() {
     private var result: MethodChannel.Result? = null
@@ -15,6 +16,7 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val packageName = sbn.packageName
+        val appName = getAppName(packageName)
         val tag = sbn.tag ?: "No tag"
         val postTime = sbn.postTime
         val notification = sbn.notification
@@ -28,14 +30,15 @@ class NotificationListener : NotificationListenerService() {
         val category = notification.category ?: "No Category"
         val tickerText = notification.tickerText?.toString() ?: "No TickerText"
         val notificationPriority = notification.priority
-        val notificationChannelId = notification.channelId
-        val notificationId = "${packageName}#${sbn.id}#$postTime"
-
+        val notificationChannelId = notification.channelId ?: "DefaultChannel"
+        val notificationId = "$postTime#${packageName}#${sbn.id}"
+        val status = "unread"
 
         // Create JSON object with all the notification details
         val notificationDetails = JSONObject().apply {
-            put("packageName", packageName)
             put("notificationId", notificationId)
+            put("packageName", packageName)
+            put("appName", appName)
             put("tag", tag)
             put("postTime", postTime)
             put("title", title)
@@ -46,6 +49,7 @@ class NotificationListener : NotificationListenerService() {
             put("tickerText", tickerText)
             put("priority", notificationPriority)
             put("channelId", notificationChannelId)
+            put("status", status)
         }
 
         // Log JSON data for debugging
@@ -64,5 +68,16 @@ class NotificationListener : NotificationListenerService() {
 
     fun getUnprocessedNotificationsFromTempStorage(): List<String> {
         return SharedPrefManager.getUnprocessedNotifications(this)
+    }
+
+    private fun getAppName(packageName: String): String {
+        return try {
+            val packageManager = applicationContext.packageManager
+            val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+            packageManager.getApplicationLabel(appInfo).toString()
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+            "Unknown App"
+        }
     }
 }

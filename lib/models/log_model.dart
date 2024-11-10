@@ -29,7 +29,7 @@ class LogModel {
 
   static Future<void> addLog(String logType, String message) async {
     // Get the directory for storing Hive data
-    if (!Hive.isBoxOpen(AppConstants.unreadNotifications)) {
+    if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
       var appDir = await getApplicationDocumentsDirectory();
       Hive.init(appDir.path);
     }

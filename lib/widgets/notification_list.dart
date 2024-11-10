@@ -1,6 +1,10 @@
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:get/get.dart';
+import 'package:prj3/controllers/notification_controller.dart';
+import 'package:prj3/widgets/notification_detail.dart';
 import 'package:prj3/widgets/notification_icon.dart';
+import 'dart:async';
 
 class NotificationList extends StatefulWidget {
   final String notificationType;
@@ -12,108 +16,107 @@ class NotificationList extends StatefulWidget {
 
 class _NotificationListState extends State<NotificationList>
     with AutomaticKeepAliveClientMixin {
-  List<dynamic> notifications = []; // List to hold notification data
-  int currentPage = 0; // Current page number
-  final int pageSize = 10; // Number of items to fetch per page
-  bool isLoading = false; // Loading state
-  bool hasMore = true; // Flag to check if more items are available
-  Box? notificationBox; // Reference to Hive box
-
+  final NotificationController notificationController = Get.find();
+  static const int pageSize = 10;
+  late RxList<dynamic> notifications;
+  final PagingController<int, dynamic> _pagingController =
+      PagingController(firstPageKey: 0);
+  
   @override
   void initState() {
     super.initState();
-    _initNotifications();
+    notifications = notificationController.getNotificationList(widget.notificationType);
+
+    // Listen for changes in notifications
+    ever(notifications, (_) {
+      _appendNewItems();
+    });
+
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
   }
 
   @override
   void dispose() {
-    notificationBox?.close(); // Close the box to prevent memory leaks
+    _pagingController.dispose();
     super.dispose();
   }
 
-  // Initialize Hive box and fetch initial notifications
-  Future<void> _initNotifications() async {
-    // Initialize the Hive box dynamically based on notificationType
-    notificationBox = await Hive.openBox(widget.notificationType);
-    _fetchNotifications();
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final start = pageKey * pageSize;
+      if ((_pagingController.itemList?.length ?? 0) > start) {
+        _pagingController.appendLastPage([]);
+      }
+      final newItems = notifications.skip(start).take(pageSize).toList();
+
+      final isLastPage = newItems.length < pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
   }
 
-  // Function to load notifications from Hive box with pagination
-  Future<List<dynamic>> _getNotifications() async {
-    if (notificationBox == null) return [];
-    return notificationBox!.values
-        .skip(currentPage * pageSize)
-        .take(pageSize)
-        .toList();
-  }
+  // This method will be called when the notifications change
+  void _appendNewItems() {
+    final newItems = notifications.skip(_pagingController.itemList?.length ?? 0).take(pageSize).toList();
+    print('append new item');
+    print(newItems);
 
-  // Function to fetch notifications and update state
-  Future<void> _fetchNotifications() async {
-    if (isLoading || !hasMore) return; // Prevent duplicate loads
-
-    setState(() {
-      isLoading = true;
-    });
-
-    var newNotifications = await _getNotifications();
-
-    setState(() {
-      currentPage++;
-      isLoading = false;
-      hasMore = newNotifications.length ==
-          pageSize; // Check if more data is available
-      notifications.addAll(newNotifications);
-    });
+    if (newItems.isNotEmpty) {
+      _pagingController.appendLastPage(newItems);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context); // Required for AutomaticKeepAliveClientMixin
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-          _fetchNotifications(); // Load more when reaching the bottom
-        }
-        return true;
-      },
-      child: ListView.separated(
-        itemCount: notifications.length +
-            (isLoading ? 1 : 0), // Add loading item if loading
-        separatorBuilder: (context, index) => const Divider(),
-        itemBuilder: (context, index) {
-          if (index == notifications.length) {
-            // Show loading indicator at the end
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return ListTile(
-            leading: Row(
-              mainAxisSize:
-                  MainAxisSize.min, // Ensures minimal width for the row
-              children: [
-                Text(
-                  '${index + 1}', // Display index starting from 1
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+    return PagedListView<int, dynamic>(
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate<dynamic>(
+        itemBuilder: (context, notification, index) {
+          return GestureDetector(
+            onTap: () {
+              // Navigate to NotificationDetail screen when tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationDetail(notification: notification),
                 ),
-                const SizedBox(width: 8), // Spacing between index and icon
-                NotificationIcon(
-                    packageName: notifications[index]['packageName']),
-              ],
-            ),
-            title: Text(
-              notifications[index]['title'],
-              maxLines: 1, // Ensures the title is only on one line
-              overflow: TextOverflow.ellipsis, // Clips text if it's too long
-            ),
-            subtitle: Text(
-              notifications[index]['text'] ??
-                  '', // Display additional content below title
-              maxLines: 2, // Limits the subtitle to two lines
-              overflow: TextOverflow.ellipsis, // Clips text if it's too long
+              );
+            },
+            child: ListTile(
+              leading: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${index + 1}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8),
+                  NotificationIcon(packageName: notification['packageName']),
+                ],
+              ),
+              title: Text(
+                notification['title'] ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                notification['text'] ?? '',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           );
-        },
+        }
       ),
     );
   }
