@@ -140,8 +140,17 @@ class NotificationController extends GetxController {
     }
   }
 
+  Future<void> deleteNotification(int notificationId) async {
+    var notification = notificationBox!.get(notificationId);
+    if (notification != null) {
+      notification['status'] = 'deleted';
+      notification['updatedAt'] = DateTime.now();
+      await notificationBox!.put(notificationId, notification);
+      await _filterNotifications();
+    }
+  }
+
   RxList<dynamic> getNotificationList(String type) {
-    print(type);
     if (type == 'unread') {
       return unreadNotifications;
     }
