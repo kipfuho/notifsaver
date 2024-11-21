@@ -5,6 +5,7 @@ import org.json.JSONObject
 
 object SharedPrefManager {
     private const val PREFS_NAME = "TempNotifications_notifsaver"
+    private const val SETTING_NAME = "Setting_notifsaver"
 
     fun getUnprocessedNotifications(context: Context): List<String> {
         val sharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -33,5 +34,20 @@ object SharedPrefManager {
         val editor = sharedPrefs.edit()
         editor.remove(notificationId)
         editor.apply()
+    }
+
+    fun getAllExclusiveApp(context: Context): List<String> {
+        val _key = "exclusive_app"
+        val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
+        val allExclusiveAppNameSet = sharedPrefs.getStringSet(_key, emptySet()) ?: emptySet()
+        return allExclusiveAppNameSet.toList()
+    }
+
+    fun addExclusiveAppList(context: Context, packageName: String) {
+        val _key = "exclusive_app"
+        val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPrefs.edit()
+        editor.putStringSet(_key, packageName)
+        editor.apply()  // Apply the changes
     }
 }

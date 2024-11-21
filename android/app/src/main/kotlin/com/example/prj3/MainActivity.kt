@@ -48,6 +48,23 @@ class MainActivity: FlutterActivity() {
                         result.error("UNAVAILABLE", "App icon not available.", null)
                     }
                 }
+                "getApplicationPackageNames" -> {
+                    val packagesThatCanSendNotifications = getPackagesThatCanSendNotifications()
+                    if (packagesThatCanSendNotifications) {
+                        result.success(packagesThatCanSendNotifications)
+                    } else {
+                        result.error("UNAVAILABLE", "App package name not available.", null)
+                    }
+                }
+                "getExclusiveApps" -> {
+                    val exclusiveApps = SharedPrefManager.getAllExclusiveApp(this)
+                    result.success(exclusiveApps)
+                }
+                "addExclusiveApp" -> {
+                    val packageName = call.arguments as String
+                    val exclusiveApps = SharedPrefManager.addExclusiveAppList(this, packageName)
+                    result.success(null)
+                }
                 else -> result.notImplemented()
             }
         }
@@ -112,6 +129,30 @@ class MainActivity: FlutterActivity() {
             null
         } catch (e: Exception) {
             Log.e("getAppIcon", "Error retrieving app icon: ${e.message}", e)
+            null
+        }
+    }
+
+    fun getPackagesThatCanSendNotifications(): List<String> {
+        try {
+            val packageManager = this.packageManager
+            val installedPackages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            val packagesThatCanSendNotifications = mutableListOf<String>()
+            for (app in installedPackages) {
+                val packageName = app.packageName
+                val appInfo = packageManager.getApplicationInfo(packageName, 0)
+                val canSendNotifications = notificationManager.areNotificationsEnabledForPackage(packageName, appInfo.uid)
+
+                if (canSendNotifications) {
+                    packagesThatCanSendNotifications.add(packageName)
+                }
+            }
+
+            return packagesThatCanSendNotifications
+        } catch (e: Exception) {
+            Log.e("getPackagesThatCanSendNotifications", "Error retrieving app icon: ${e.message}", e)
             null
         }
     }

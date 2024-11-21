@@ -13,6 +13,23 @@ class PlatformChannels {
     return icon;
   }
 
+  static Future<List<String>> getAppPackageNames() async {
+    final List<String> appNames =
+        await notificationsChannel.invokeMethod('getApplicationPackageNames');
+    return appNames;
+  }
+
+  static Future<List<String>> getAllExclusiveApp() async {
+    final List<String> appNames =
+        await notificationsChannel.invokeMethod('getExclusiveApps');
+    return appNames;
+  }
+
+  static Future<void> addExclusiveApp(packageName) async {
+    await notificationsChannel.invokeMethod('addExclusiveApp', packageName);
+    return;
+  }
+
   static Future<void> openNotificationSettings() async {
     await notificationsChannel.invokeMethod('openNotificationSettings');
   }
