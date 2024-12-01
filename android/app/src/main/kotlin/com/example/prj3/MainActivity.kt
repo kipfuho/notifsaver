@@ -62,7 +62,12 @@ class MainActivity: FlutterActivity() {
                 }
                 "addExclusiveApp" -> {
                     val packageName = call.arguments as String
-                    val exclusiveApps = SharedPrefManager.addExclusiveAppList(this, packageName)
+                    SharedPrefManager.addExclusiveAppList(this, packageName)
+                    result.success(null)
+                }
+                "removeExclusiveApp" -> {
+                    val packageName = call.arguments as String
+                    SharedPrefManager.removeExclusiveAppList(this, packageName)
                     result.success(null)
                 }
                 else -> result.notImplemented()

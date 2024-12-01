@@ -47,7 +47,19 @@ object SharedPrefManager {
         val _key = "exclusive_app"
         val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
         val editor = sharedPrefs.edit()
-        editor.putStringSet(_key, packageName)
-        editor.apply()  // Apply the changes
+        val existingSet = sharedPrefs.getStringSet(_key, mutableSetOf()) ?: mutableSetOf()
+        existingSet.add(packageName)
+        editor.putStringSet(_key, existingSet)
+        editor.apply()
+    }
+
+    fun removeExclusiveAppList(context: Context, packageName: String) {
+        val _key = "exclusive_app"
+        val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPrefs.edit()
+        val existingSet = sharedPrefs.getStringSet(_key, mutableSetOf()) ?: mutableSetOf()
+        existingSet.remove(packageName)
+        editor.putStringSet(_key, existingSet)
+        editor.apply()
     }
 }

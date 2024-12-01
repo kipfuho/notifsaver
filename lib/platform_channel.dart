@@ -30,6 +30,11 @@ class PlatformChannels {
     return;
   }
 
+  static Future<void> removeExclusiveApp(packageName) async {
+    await notificationsChannel.invokeMethod('removeExclusiveApp', packageName);
+    return;
+  }
+
   static Future<void> openNotificationSettings() async {
     await notificationsChannel.invokeMethod('openNotificationSettings');
   }
