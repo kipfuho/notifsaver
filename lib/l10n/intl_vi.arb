@@ -1,0 +1,8 @@
+{
+  "settings_title": "Cài đặt",
+  "settings.openNotificationSetting": "Mở cài đặt quyền truy cập thông báo",
+  "settings.selectLangugage": "Chọn ngôn ngữ",
+  "settings.exclusiveApps": "Các ứng dụng không cho phép đọc thông báo",
+  "greeting": "Hello!",
+  "welcome_message": "Welcome to the Flutter App."
+}

@@ -1,0 +1,8 @@
+{
+  "settings.title": "Settings",
+  "settings.openNotificationSetting": "Open notifications permission settings",
+  "settings.selectLangugage": "Select Language",
+  "settings.exclusiveApps": "Apps to not read notifications from",
+  "greeting": "Hello!",
+  "welcome_message": "Welcome to the Flutter App."
+}

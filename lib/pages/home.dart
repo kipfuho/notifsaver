@@ -65,8 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // Navigate to ExclusiveAppSettingsPage
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const SettingsPage()),
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
               );
             },
           ),
