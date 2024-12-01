@@ -18,7 +18,7 @@ class NotificationListener : NotificationListenerService() {
         val packageName = sbn.packageName
         val exclusiveApps = SharedPrefManager.getAllExclusiveApp(this)
         // check if allow save notification
-        if (exclusiveApps?.contains(packageName) != true) return
+        if (exclusiveApps?.contains(packageName) == true) return
 
         val appName = getAppName(packageName)
         val tag = sbn.tag ?: "No tag"
