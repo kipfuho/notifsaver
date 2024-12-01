@@ -13,6 +13,12 @@ class PlatformChannels {
     return icon;
   }
 
+  static Future<String> getAppName(String packageName) async {
+    final String appName =
+        await notificationsChannel.invokeMethod('getAppName', packageName);
+    return appName;
+  }
+
   static Future<List<String>> getAppPackageNames() async {
     final List<String> appNames =
         await notificationsChannel.invokeMethod('getApplicationPackageNames');

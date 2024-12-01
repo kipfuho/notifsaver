@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prj3/utils/app_icon_manager.dart';
+import 'package:prj3/utils/app_manager.dart';
 
 class NotificationIcon extends StatelessWidget {
   final String packageName;

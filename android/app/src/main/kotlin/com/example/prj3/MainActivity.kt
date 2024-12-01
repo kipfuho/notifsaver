@@ -48,6 +48,11 @@ class MainActivity: FlutterActivity() {
                         result.error("UNAVAILABLE", "App icon not available.", null)
                     }
                 }
+                "getAppName" -> {
+                    val packageName = call.arguments as String
+                    val appName = getAppName(packageName)
+                    result.success(appName)
+                }
                 "getApplicationPackageNames" -> {
                     val packagesThatCanSendNotifications = getPackagesThatCanSendNotifications()
                     if (packagesThatCanSendNotifications) {
@@ -135,6 +140,20 @@ class MainActivity: FlutterActivity() {
         } catch (e: Exception) {
             Log.e("getAppIcon", "Error retrieving app icon: ${e.message}", e)
             null
+        }
+    }
+
+    private fun getAppName(packageName: String): String {
+        return try {
+            val appInfo: ApplicationInfo = this.packageManager.getApplicationInfo(packageName, 0)
+            val appName: CharSequence = this.packageManager.getApplicationLabel(appInfo)
+            appName.toString()
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e("getAppName", "Application not found: ${e.message}")
+            packageName
+        } catch (e: Exception) {
+            Log.e("getAppName", "Error retrieving app name: ${e.message}", e)
+            packageName
         }
     }
 
