@@ -58,7 +58,7 @@ class MainActivity: FlutterActivity() {
                 }
                 "getExclusiveApps" -> {
                     val exclusiveApps = SharedPrefManager.getAllExclusiveApp(this)
-                    result.success(exclusiveApps)
+                    result.success(exclusiveApps.toList())
                 }
                 "addExclusiveApp" -> {
                     val packageName = call.arguments as String

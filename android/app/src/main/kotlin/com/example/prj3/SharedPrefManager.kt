@@ -40,7 +40,7 @@ object SharedPrefManager {
         val _key = "exclusive_app"
         val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
         val allExclusiveAppNameSet = sharedPrefs.getStringSet(_key, emptySet()) ?: emptySet()
-        return allExclusiveAppNameSet.toList()
+        return allExclusiveAppNameSet
     }
 
     fun addExclusiveAppList(context: Context, packageName: String) {
