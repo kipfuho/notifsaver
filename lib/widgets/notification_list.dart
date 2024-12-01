@@ -84,7 +84,8 @@ class _NotificationListState extends State<NotificationList>
         itemBuilder: (context, notification, index) {
           return GestureDetector(
             onTap: () {
-              // Navigate to NotificationDetail screen when tapped
+              // Mark notification as read and navigate to detail page
+              notificationController.markAsRead(notification['notificationId']);
               Navigator.push(
                 context,
                 MaterialPageRoute(

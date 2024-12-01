@@ -110,7 +110,7 @@ class NotificationController extends GetxController {
         .toList();
   }
 
-  Future<void> markAsRead(int notificationId) async {
+  Future<void> markAsRead(dynamic notificationId) async {
     var notification = notificationBox!.get(notificationId);
     if (notification != null) {
       notification['status'] = 'read';
@@ -120,7 +120,7 @@ class NotificationController extends GetxController {
     }
   }
 
-  Future<void> saveNotification(int notificationId) async {
+  Future<void> saveNotification(dynamic notificationId) async {
     var notification = notificationBox!.get(notificationId);
     if (notification != null) {
       notification['status'] = 'saved';
@@ -130,7 +130,7 @@ class NotificationController extends GetxController {
     }
   }
 
-  Future<void> unSaveNotification(int notificationId) async {
+  Future<void> unSaveNotification(dynamic notificationId) async {
     var notification = notificationBox!.get(notificationId);
     if (notification != null) {
       notification['status'] = 'read';
@@ -140,7 +140,7 @@ class NotificationController extends GetxController {
     }
   }
 
-  Future<void> deleteNotification(int notificationId) async {
+  Future<void> deleteNotification(dynamic notificationId) async {
     var notification = notificationBox!.get(notificationId);
     if (notification != null) {
       notification['status'] = 'deleted';
@@ -150,7 +150,7 @@ class NotificationController extends GetxController {
     }
   }
 
-  RxList<dynamic> getNotificationList(String type) {
+  RxList<dynamic> getNotificationList(dynamic type) {
     if (type == 'unread') {
       return unreadNotifications;
     }
