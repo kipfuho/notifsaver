@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import java.io.ByteArrayOutputStream
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.content.Context
 import android.content.Intent
 import android.util.Base64
 import android.os.Bundle
@@ -54,9 +55,9 @@ class MainActivity: FlutterActivity() {
                     result.success(appName)
                 }
                 "getApplicationPackageNames" -> {
-                    val packagesThatCanSendNotifications = getPackagesThatCanSendNotifications()
-                    if (packagesThatCanSendNotifications) {
-                        result.success(packagesThatCanSendNotifications)
+                    val allPackageNames = getAllPackageNames()
+                    if (allPackageNames.isNotEmpty()) {
+                        result.success(allPackageNames)
                     } else {
                         result.error("UNAVAILABLE", "App package name not available.", null)
                     }
@@ -157,27 +158,25 @@ class MainActivity: FlutterActivity() {
         }
     }
 
-    fun getPackagesThatCanSendNotifications(): List<String> {
+    fun getAllPackageNames(): List<String> {
         try {
             val packageManager = this.packageManager
-            val installedPackages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-            val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val installedPackages = packageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS)
 
-            val packagesThatCanSendNotifications = mutableListOf<String>()
+            val allPackageNames = mutableListOf<String>()
             for (app in installedPackages) {
-                val packageName = app.packageName
-                val appInfo = packageManager.getApplicationInfo(packageName, 0)
-                val canSendNotifications = notificationManager.areNotificationsEnabledForPackage(packageName, appInfo.uid)
-
-                if (canSendNotifications) {
-                    packagesThatCanSendNotifications.add(packageName)
+                // Check if the app is a system app
+                if (app.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
+                    // If it's not a system app, add it to the list
+                    val packageName = app.packageName
+                    allPackageNames.add(packageName)
                 }
             }
-
-            return packagesThatCanSendNotifications
+            Log.d("getAllPackageNames", "All package names: $allPackageNames")
+            return allPackageNames
         } catch (e: Exception) {
-            Log.e("getPackagesThatCanSendNotifications", "Error retrieving app icon: ${e.message}", e)
-            null
+            Log.e("getAllPackageNames", "Error retrieving app icon: ${e.message}", e)
+            return mutableListOf<String>()
         }
     }
 }

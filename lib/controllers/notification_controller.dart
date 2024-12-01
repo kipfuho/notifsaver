@@ -35,7 +35,7 @@ class NotificationController extends GetxController {
 
   void openNotificationSettings() {
     try {
-      PlatformChannels.openNotificationSettings;
+      PlatformChannels.openNotificationSettings();
     } on PlatformException catch (e) {
       print("Failed to open notification settings: '${e.message}'");
     }

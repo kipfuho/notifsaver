@@ -36,7 +36,7 @@ object SharedPrefManager {
         editor.apply()
     }
 
-    fun getAllExclusiveApp(context: Context): List<String> {
+    fun getAllExclusiveApp(context: Context): Set<String> {
         val _key = "exclusive_app"
         val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
         val allExclusiveAppNameSet = sharedPrefs.getStringSet(_key, emptySet()) ?: emptySet()

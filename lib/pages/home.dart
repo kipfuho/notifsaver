@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:prj3/controllers/notification_controller.dart';
+import 'package:prj3/pages/setting.dart';
 import 'package:prj3/widgets/notification_list.dart';
 import 'package:prj3/constant.dart';
 
@@ -55,11 +56,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Screen'),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              notificationController.openNotificationSettings();
+              // notificationController.openNotificationSettings();
+              // Navigate to ExclusiveAppSettingsPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const SettingsPage()),
+              );
             },
           ),
         ],

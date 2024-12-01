@@ -3,15 +3,14 @@ import 'package:prj3/platform_channel.dart';
 import 'package:prj3/utils/app_manager.dart';
 import 'package:prj3/widgets/notification_icon.dart';
 
-class ExclusiveAppSettingsPage extends StatefulWidget {
-  const ExclusiveAppSettingsPage({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
   @override
-  State<ExclusiveAppSettingsPage> createState() =>
-      _ExclusiveAppSettingsPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _ExclusiveAppSettingsPageState extends State<ExclusiveAppSettingsPage> {
+class _SettingsPageState extends State<SettingsPage> {
   List<String> allApps = [];
   List<String> exclusiveApps = [];
   List<String> selectedApps = [];
@@ -53,39 +52,67 @@ class _ExclusiveAppSettingsPageState extends State<ExclusiveAppSettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Manage Exclusive Apps"),
+          title: const Text("Setting"),
         ),
-        body: allApps.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: allApps.length,
-                itemBuilder: (context, index) {
-                  final appName = allApps[index];
-                  final isSelected = selectedApps.contains(appName);
-
-                  return FutureBuilder<String?>(
-                    future: AppIconManager.getCachedAppName(appName),
-                    builder: (context, snapshot) {
-                      String displayName = appName;
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        displayName = snapshot.data ?? appName;
-                      }
-
-                      return ListTile(
-                        leading: NotificationIcon(packageName: appName),
-                        title: Text(displayName),
-                        trailing: Checkbox(
-                          value: isSelected,
-                          onChanged: (bool? value) {
-                            if (value != null) {
-                              _toggleAppSelection(appName, value);
-                            }
-                          },
-                        ),
-                      );
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                      height: 8), // Add space between label and button
+                  // Button
+                  ElevatedButton(
+                    onPressed: () {
+                      // Add your button's action here
+                      print("Button Pressed!");
                     },
-                  );
-                },
-              ));
+                    child: const Text('Open notifications permission setting'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Exclusive apps',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: allApps.length,
+                  itemBuilder: (context, index) {
+                    final appName = allApps[index];
+                    final isSelected = selectedApps.contains(appName);
+
+                    return FutureBuilder<String?>(
+                      future: AppIconManager.getCachedAppName(appName),
+                      builder: (context, snapshot) {
+                        String displayName = appName;
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          displayName = snapshot.data ?? appName;
+                        }
+
+                        return ListTile(
+                          leading: NotificationIcon(packageName: appName),
+                          title: Text(displayName),
+                          trailing: Checkbox(
+                            value: isSelected,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                _toggleAppSelection(appName, value);
+                              }
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }),
+            ),
+          ],
+        ));
   }
 }

@@ -20,15 +20,18 @@ class PlatformChannels {
   }
 
   static Future<List<String>> getAppPackageNames() async {
-    final List<String> appNames =
+    final List<dynamic> appNames =
         await notificationsChannel.invokeMethod('getApplicationPackageNames');
-    return appNames;
+    final List<String> packageNames = appNames.cast<String>();
+
+    return packageNames;
   }
 
   static Future<List<String>> getAllExclusiveApp() async {
-    final List<String> appNames =
+    final List<dynamic> appNames =
         await notificationsChannel.invokeMethod('getExclusiveApps');
-    return appNames;
+    final List<String> packageNames = appNames.cast<String>();
+    return packageNames;
   }
 
   static Future<void> addExclusiveApp(packageName) async {
