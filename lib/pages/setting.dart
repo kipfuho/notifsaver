@@ -91,13 +91,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     onPressed: () {
                       PlatformChannels.openNotificationSettings();
                     },
-                    child: const Text('Open notifications permission setting'),
+                    child: Text(Intl.message('settings_openNotificationSetting',
+                        name: 'settings_openNotificationSetting')),
                   ),
                   const SizedBox(height: 16),
                   // Language Selector Dropdown
-                  const Text(
-                    'Select Language',
-                    style: TextStyle(fontSize: 18),
+                  Text(
+                    Intl.message('settings_selectLangugage',
+                        name: 'settings_selectLangugage'),
+                    style: const TextStyle(fontSize: 18),
                   ),
                   DropdownButton<Locale>(
                     value: _currentLocale,
@@ -125,9 +127,10 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Exclusive apps',
-              style: TextStyle(
+            Text(
+              Intl.message('settings_exclusiveApps',
+                  name: 'settings_exclusiveApps'),
+              style: const TextStyle(
                 fontSize: 18,
               ),
             ),

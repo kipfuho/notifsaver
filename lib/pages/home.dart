@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:prj3/controllers/notification_controller.dart';
-import 'package:prj3/pages/setting.dart';
 import 'package:prj3/widgets/notification_list.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:prj3/pages/setting.dart';
+import 'package:flutter/material.dart';
 import 'package:prj3/constant.dart';
+import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Screen'),
+        title: Text(Intl.message('home', name: 'home')),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
@@ -63,10 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               // notificationController.openNotificationSettings();
               // Navigate to ExclusiveAppSettingsPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
-              );
+              Get.to(() => const SettingsPage());
             },
           ),
         ],
@@ -100,18 +98,18 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.markunread),
-            label: 'Unread',
+            icon: const Icon(Icons.markunread),
+            label: Intl.message('unread', name: 'unread'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.done),
-            label: 'Read',
+            icon: const Icon(Icons.done),
+            label: Intl.message('read', name: 'read'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.save),
-            label: 'Saved',
+            icon: const Icon(Icons.save),
+            label: Intl.message('saved', name: 'saved'),
           ),
         ],
       ),

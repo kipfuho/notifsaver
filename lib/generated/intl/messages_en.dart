@@ -22,9 +22,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "greeting": MessageLookupByLibrary.simpleMessage("Hello!"),
+        "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "login": MessageLookupByLibrary.simpleMessage("Log in"),
+        "login_google":
+            MessageLookupByLibrary.simpleMessage("Log in with Google"),
+        "read": MessageLookupByLibrary.simpleMessage("Read"),
+        "saved": MessageLookupByLibrary.simpleMessage("Saved"),
+        "settings_exclusiveApps": MessageLookupByLibrary.simpleMessage(
+            "Apps to not read notifications from"),
+        "settings_openNotificationSetting":
+            MessageLookupByLibrary.simpleMessage(
+                "Open notifications permission settings"),
+        "settings_selectLangugage":
+            MessageLookupByLibrary.simpleMessage("Select Language"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Settings"),
-        "welcome_message":
-            MessageLookupByLibrary.simpleMessage("Welcome to the Flutter App.")
+        "unread": MessageLookupByLibrary.simpleMessage("Unread")
       };
 }

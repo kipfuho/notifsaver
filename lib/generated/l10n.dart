@@ -50,6 +50,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Home`
+  String get home {
+    return Intl.message(
+      'Home',
+      name: 'home',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get settings_title {
     return Intl.message(
@@ -60,21 +70,81 @@ class S {
     );
   }
 
-  /// `Hello!`
-  String get greeting {
+  /// `Open notifications permission settings`
+  String get settings_openNotificationSetting {
     return Intl.message(
-      'Hello!',
-      name: 'greeting',
+      'Open notifications permission settings',
+      name: 'settings_openNotificationSetting',
       desc: '',
       args: [],
     );
   }
 
-  /// `Welcome to the Flutter App.`
-  String get welcome_message {
+  /// `Select Language`
+  String get settings_selectLangugage {
     return Intl.message(
-      'Welcome to the Flutter App.',
-      name: 'welcome_message',
+      'Select Language',
+      name: 'settings_selectLangugage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apps to not read notifications from`
+  String get settings_exclusiveApps {
+    return Intl.message(
+      'Apps to not read notifications from',
+      name: 'settings_exclusiveApps',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log in`
+  String get login {
+    return Intl.message(
+      'Log in',
+      name: 'login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log in with Google`
+  String get login_google {
+    return Intl.message(
+      'Log in with Google',
+      name: 'login_google',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unread`
+  String get unread {
+    return Intl.message(
+      'Unread',
+      name: 'unread',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read`
+  String get read {
+    return Intl.message(
+      'Read',
+      name: 'read',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saved`
+  String get saved {
+    return Intl.message(
+      'Saved',
+      name: 'saved',
       desc: '',
       args: [],
     );

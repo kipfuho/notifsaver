@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:prj3/controllers/user_controller.dart';
-import 'package:prj3/google_service.dart';
-import 'package:prj3/pages/home.dart';
-import 'package:get/get.dart';
 import 'package:prj3/utils/hot_message.dart';
+import 'package:prj3/google_service.dart';
+import 'package:flutter/material.dart';
+import 'package:prj3/pages/home.dart';
+import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -28,7 +29,7 @@ class _SignInScreenState extends State<SignInScreen> {
         // Sign-in successful
         _userController.setUser(user);
         print("Navigating to HomeScreen"); // Debugging statement
-        Get.to(() => HomeScreen());
+        Get.to(() => const HomeScreen());
       } else {
         print("User is null after sign-in"); // Debugging statement
       }
@@ -44,25 +45,22 @@ class _SignInScreenState extends State<SignInScreen> {
         title: const Text('Notif Saver'),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(
-            bottom: 100.0), // Adjust this value to move it higher or lower
+        padding: const EdgeInsets.only(bottom: 100.0),
         child: Center(
           child: Column(
-            mainAxisAlignment:
-                MainAxisAlignment.center, // Centers content vertically
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text(
-                'Login', // This is the login text
-                style: TextStyle(
-                  fontSize: 24, // You can adjust the font size
-                  fontWeight: FontWeight.bold, // Make the text bold
+              Text(
+                Intl.message('login', name: 'login'),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(
-                  height: 20), // Adds space between the text and the button
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _signInWithGoogle,
-                child: const Text('Sign in with Google'),
+                child: Text(Intl.message('login_google', name: 'login_google')),
               ),
             ],
           ),

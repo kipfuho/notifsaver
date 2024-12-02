@@ -1,8 +1,12 @@
 {
+  "home": "Trang chủ",
   "settings_title": "Cài đặt",
-  "settings.openNotificationSetting": "Mở cài đặt quyền truy cập thông báo",
-  "settings.selectLangugage": "Chọn ngôn ngữ",
-  "settings.exclusiveApps": "Các ứng dụng không cho phép đọc thông báo",
-  "greeting": "Hello!",
-  "welcome_message": "Welcome to the Flutter App."
+  "settings_openNotificationSetting": "Mở cài đặt quyền truy cập thông báo",
+  "settings_selectLangugage": "Chọn ngôn ngữ",
+  "settings_exclusiveApps": "Các ứng dụng không cho phép đọc thông báo",
+  "login": "Đăng nhập",
+  "login_google": "Đăng nhập với Google",
+  "unread": "Chưa đọc",
+  "read": "Đã đọc",
+  "saved": "Đã lưu"
 }

@@ -22,9 +22,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "greeting": MessageLookupByLibrary.simpleMessage("Hello!"),
+        "home": MessageLookupByLibrary.simpleMessage("Trang chủ"),
+        "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
+        "login_google":
+            MessageLookupByLibrary.simpleMessage("Đăng nhập với Google"),
+        "read": MessageLookupByLibrary.simpleMessage("Đã đọc"),
+        "saved": MessageLookupByLibrary.simpleMessage("Đã lưu"),
+        "settings_exclusiveApps": MessageLookupByLibrary.simpleMessage(
+            "Các ứng dụng không cho phép đọc thông báo"),
+        "settings_openNotificationSetting":
+            MessageLookupByLibrary.simpleMessage(
+                "Mở cài đặt quyền truy cập thông báo"),
+        "settings_selectLangugage":
+            MessageLookupByLibrary.simpleMessage("Chọn ngôn ngữ"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Cài đặt"),
-        "welcome_message":
-            MessageLookupByLibrary.simpleMessage("Welcome to the Flutter App.")
+        "unread": MessageLookupByLibrary.simpleMessage("Chưa đọc")
       };
 }
