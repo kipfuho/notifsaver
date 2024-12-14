@@ -1,4 +1,6 @@
+import 'package:prj3/controllers/filter_controller.dart';
 import 'package:prj3/controllers/notification_controller.dart';
+import 'package:prj3/pages/filter.dart';
 import 'package:prj3/widgets/notification_list.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:prj3/pages/setting.dart';
@@ -16,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final NotificationController notificationController = Get.find();
+  final FilterController filterController = Get.find();
   int _selectedIndex = 0; // Track the selected tab
 
   // Define the different pages for the BottomNavigationBar
@@ -57,13 +60,22 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Intl.message('home', name: 'home')),
-        automaticallyImplyLeading: false,
         actions: [
+          IconButton(
+            icon: Icon(filterController.isSearching.value
+                ? Icons.close
+                : Icons.search),
+            onPressed: () {
+              if (filterController.isSearching.value) {
+                filterController.clearSearch();
+              } else {
+                Get.to(() => const FilterScreen());
+              }
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // notificationController.openNotificationSettings();
-              // Navigate to ExclusiveAppSettingsPage
               Get.to(() => const SettingsPage());
             },
           ),
