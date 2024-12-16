@@ -27,20 +27,20 @@ class PlatformChannels {
     return packageNames;
   }
 
-  static Future<List<String>> getAllExclusiveApp() async {
+  static Future<List<String>> getAllInclusiveApp() async {
     final List<dynamic> appNames =
-        await notificationsChannel.invokeMethod('getExclusiveApps');
+        await notificationsChannel.invokeMethod('getAllInclusiveApp');
     final List<String> packageNames = appNames.cast<String>();
     return packageNames;
   }
 
-  static Future<void> addExclusiveApp(packageName) async {
-    await notificationsChannel.invokeMethod('addExclusiveApp', packageName);
+  static Future<void> addInclusiveApp(packageName) async {
+    await notificationsChannel.invokeMethod('addInclusiveApp', packageName);
     return;
   }
 
-  static Future<void> removeExclusiveApp(packageName) async {
-    await notificationsChannel.invokeMethod('removeExclusiveApp', packageName);
+  static Future<void> removeInclusiveApp(packageName) async {
+    await notificationsChannel.invokeMethod('removeInclusiveApp', packageName);
     return;
   }
 

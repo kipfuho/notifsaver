@@ -28,8 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Log in with Google"),
         "read": MessageLookupByLibrary.simpleMessage("Read"),
         "saved": MessageLookupByLibrary.simpleMessage("Saved"),
-        "settings_exclusiveApps": MessageLookupByLibrary.simpleMessage(
-            "Apps to not read notifications from"),
+        "settings_inclusiveApps": MessageLookupByLibrary.simpleMessage(
+            "Apps to read notifications from"),
         "settings_openNotificationSetting":
             MessageLookupByLibrary.simpleMessage(
                 "Open notifications permission settings"),

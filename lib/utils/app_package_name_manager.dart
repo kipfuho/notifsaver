@@ -35,9 +35,9 @@ class AppPackageNameManager {
   }
 
   // get all app package names that do not wish to receive notification
-  static Future<List<String>> getExclusiveAppFromCache() async {
+  static Future<List<String>> getInclusiveAppFromCache() async {
     try {
-      List<String> appNames = await PlatformChannels.getAllExclusiveApp();
+      List<String> appNames = await PlatformChannels.getAllInclusiveApp();
       return appNames;
     } catch (err) {
       // HotMessage.showToast('Error', err.toString());
@@ -45,8 +45,8 @@ class AppPackageNameManager {
     }
   }
 
-  static Future<void> addNewAppToExclusiveList(packageName) async {
-    await PlatformChannels.addExclusiveApp(packageName);
+  static Future<void> addNewAppToInclusiveList(packageName) async {
+    await PlatformChannels.addInclusiveApp(packageName);
     return;
   }
 }

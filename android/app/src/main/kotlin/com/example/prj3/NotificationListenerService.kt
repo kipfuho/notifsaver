@@ -16,9 +16,9 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val packageName = sbn.packageName
-        val exclusiveApps = SharedPrefManager.getAllExclusiveApp(this)
+        val inclusiveApps = SharedPrefManager.getAllInclusiveApp(this)
         // check if allow save notification
-        if (exclusiveApps?.contains(packageName) == true) return
+        if (inclusiveApps?.contains(packageName) != true) return
 
         val appName = getAppName(packageName)
         val tag = sbn.tag ?: "No tag"

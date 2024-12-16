@@ -91,10 +91,10 @@ class S {
   }
 
   /// `Apps to not read notifications from`
-  String get settings_exclusiveApps {
+  String get settings_inclusiveApps {
     return Intl.message(
       'Apps to not read notifications from',
-      name: 'settings_exclusiveApps',
+      name: 'settings_inclusiveApps',
       desc: '',
       args: [],
     );

@@ -28,8 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Đăng nhập với Google"),
         "read": MessageLookupByLibrary.simpleMessage("Đã đọc"),
         "saved": MessageLookupByLibrary.simpleMessage("Đã lưu"),
-        "settings_exclusiveApps": MessageLookupByLibrary.simpleMessage(
-            "Các ứng dụng không cho phép đọc thông báo"),
+        "settings_inclusiveApps": MessageLookupByLibrary.simpleMessage(
+            "Các ứng dụng cho phép đọc thông báo"),
         "settings_openNotificationSetting":
             MessageLookupByLibrary.simpleMessage(
                 "Mở cài đặt quyền truy cập thông báo"),

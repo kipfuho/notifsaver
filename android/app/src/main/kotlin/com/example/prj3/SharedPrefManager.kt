@@ -36,15 +36,15 @@ object SharedPrefManager {
         editor.apply()
     }
 
-    fun getAllExclusiveApp(context: Context): Set<String> {
-        val _key = "exclusive_app"
+    fun getAllInclusiveApp(context: Context): Set<String> {
+        val _key = "inclusive_app"
         val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
-        val allExclusiveAppNameSet = sharedPrefs.getStringSet(_key, emptySet()) ?: emptySet()
-        return allExclusiveAppNameSet
+        val allInclusiveAppNameSet = sharedPrefs.getStringSet(_key, emptySet()) ?: emptySet()
+        return allInclusiveAppNameSet
     }
 
-    fun addExclusiveAppList(context: Context, packageName: String) {
-        val _key = "exclusive_app"
+    fun addInclusiveAppList(context: Context, packageName: String) {
+        val _key = "inclusive_app"
         val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
         val editor = sharedPrefs.edit()
         val existingSet = sharedPrefs.getStringSet(_key, mutableSetOf()) ?: mutableSetOf()
@@ -53,8 +53,8 @@ object SharedPrefManager {
         editor.apply()
     }
 
-    fun removeExclusiveAppList(context: Context, packageName: String) {
-        val _key = "exclusive_app"
+    fun removeInclusiveAppList(context: Context, packageName: String) {
+        val _key = "inclusive_app"
         val sharedPrefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
         val editor = sharedPrefs.edit()
         val existingSet = sharedPrefs.getStringSet(_key, mutableSetOf()) ?: mutableSetOf()
