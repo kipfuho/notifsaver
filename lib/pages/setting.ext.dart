@@ -3,14 +3,12 @@ part of 'setting.dart';
 class SingleSettingTile extends StatelessWidget {
   final int index;
   final String appName;
-  final String displayName;
   final InstalledAppController settingController;
 
   SingleSettingTile({
     super.key,
     required this.index,
     required this.appName,
-    required this.displayName,
     InstalledAppController? settingController,
   }) : settingController = settingController ?? Get.find();
 
@@ -28,7 +26,7 @@ class SingleSettingTile extends StatelessWidget {
             NotificationIcon(packageName: appName),
           ],
         ),
-        title: Text(displayName),
+        title: Obx(() => Text(settingController.displayAppName[appName])),
         trailing: Obx(
           () => Checkbox(
             value: settingController.settingSelectedApps[appName] ?? false,

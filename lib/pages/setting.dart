@@ -68,34 +68,41 @@ class _SettingsPageState extends State<SettingsPage> {
                         name: 'settings_openNotificationSetting')),
                   ),
                   const SizedBox(height: 16),
-                  // Language Selector Dropdown
-                  Text(
-                    Intl.message('settings_selectLangugage',
-                        name: 'settings_selectLangugage'),
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  DropdownButton<Locale>(
-                    value: _currentLocale,
-                    onChanged: (Locale? newLocale) async {
-                      if (newLocale != null) {
-                        setState(() {
-                          _currentLocale = newLocale;
-                        });
-                        await _saveLocale(newLocale);
-                      }
-                    },
-                    items: const [
-                      DropdownMenuItem(
-                        value: Locale('en', 'US'),
-                        child: Text('English'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        Intl.message(
+                          'settings_selectLanguage',
+                          name: 'settings_selectLanguage',
+                        ),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      DropdownMenuItem(
-                        value: Locale('vi', 'VN'),
-                        child: Text('Việt Nam'),
+                      const SizedBox(width: 24),
+                      DropdownButton<Locale>(
+                        value: _currentLocale,
+                        onChanged: (Locale? newLocale) async {
+                          if (newLocale != null) {
+                            setState(() {
+                              _currentLocale = newLocale;
+                            });
+                            await _saveLocale(newLocale);
+                          }
+                        },
+                        items: const [
+                          DropdownMenuItem(
+                            value: Locale('en', 'US'),
+                            child: Text('English'),
+                          ),
+                          DropdownMenuItem(
+                            value: Locale('vi', 'VN'),
+                            child: Text('Việt Nam'),
+                          ),
+                        ],
                       ),
-                      // Add other languages here
                     ],
-                  ),
+                  )
                 ],
               ),
             ),

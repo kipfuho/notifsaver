@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 class InstalledAppController extends GetxController {
   final allApps = <String>[].obs;
   final settingSelectedApps = {}.obs;
+  final displayAppName = {}.obs;
 
   @override
   void onInit() async {
     super.onInit();
     allApps.value = await PlatformChannels.getAppPackageNames();
     await _initSettingSelectedApp();
+    await _loadDisplayNameForApps();
   }
 
   Future<void> _initSettingSelectedApp() async {
@@ -17,6 +19,13 @@ class InstalledAppController extends GetxController {
         await PlatformChannels.getAllInclusiveApp();
     for (var name in inclusiveAppNames) {
       settingSelectedApps[name] = true;
+    }
+  }
+
+  Future<void> _loadDisplayNameForApps() async {
+    for (var appName in allApps) {
+      String displayName = await PlatformChannels.getAppName(appName);
+      displayAppName[appName] = displayName;
     }
   }
 

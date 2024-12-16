@@ -33,7 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_openNotificationSetting":
             MessageLookupByLibrary.simpleMessage(
                 "Mở cài đặt quyền truy cập thông báo"),
-        "settings_selectLangugage":
+        "settings_selectLanguage":
             MessageLookupByLibrary.simpleMessage("Chọn ngôn ngữ"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Cài đặt"),
         "unread": MessageLookupByLibrary.simpleMessage("Chưa đọc")

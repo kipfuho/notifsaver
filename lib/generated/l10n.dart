@@ -81,19 +81,19 @@ class S {
   }
 
   /// `Select Language`
-  String get settings_selectLangugage {
+  String get settings_selectLanguage {
     return Intl.message(
       'Select Language',
-      name: 'settings_selectLangugage',
+      name: 'settings_selectLanguage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Apps to not read notifications from`
+  /// `Apps to read notifications from`
   String get settings_inclusiveApps {
     return Intl.message(
-      'Apps to not read notifications from',
+      'Apps to read notifications from',
       name: 'settings_inclusiveApps',
       desc: '',
       args: [],

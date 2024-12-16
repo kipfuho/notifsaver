@@ -33,7 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_openNotificationSetting":
             MessageLookupByLibrary.simpleMessage(
                 "Open notifications permission settings"),
-        "settings_selectLangugage":
+        "settings_selectLanguage":
             MessageLookupByLibrary.simpleMessage("Select Language"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Settings"),
         "unread": MessageLookupByLibrary.simpleMessage("Unread")

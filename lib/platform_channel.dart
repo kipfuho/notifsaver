@@ -29,7 +29,7 @@ class PlatformChannels {
 
   static Future<List<String>> getAllInclusiveApp() async {
     final List<dynamic> appNames =
-        await notificationsChannel.invokeMethod('getAllInclusiveApp');
+        await notificationsChannel.invokeMethod('getInclusiveApps');
     final List<String> packageNames = appNames.cast<String>();
     return packageNames;
   }
