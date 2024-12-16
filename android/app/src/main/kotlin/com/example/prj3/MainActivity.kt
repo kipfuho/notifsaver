@@ -21,6 +21,51 @@ class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.example.notifsaver/notifications"
     private val STREAM_CHANNEL = "com.example.notifsaver/notificationStream"
 
+    private val NOT_INCLUDE_PACKAGE_MAP
+     = mutableMapOf<String,Boolean>(
+        "android" to true,
+        "com.android.providers.telephony" to true,
+        "com.android.providers.calendar" to true,
+        "com.android.providers.downloads" to true,
+        "com.google.android.soundpicker" to true,
+        "com.google.android.providers.media.module" to true,
+        "com.android.providers.downloads.ui" to true,
+        "com.google.android.adservices.api" to true,
+        "com.google.android.marvin.talkback" to true,
+        "com.android.egg" to true,
+        "com.android.nfc" to true,
+        "com.google.android.as" to true,
+        "com.google.android.permissioncontroller" to true,
+        "com.google.android.bluetooth" to true,
+        "com.android.providers.settings" to true,
+        "com.android.printspooler" to true,
+        "com.android.bips" to true,
+        "com.google.android.captiveportallogin" to true,
+        "com.android.musicfx" to true,
+        "com.google.android.markup" to true,
+        "com.android.server.telecom" to true,
+        "com.google.android.packageinstaller" to true,
+        "com.google.android.tag" to true,
+        "com.google.android.tts" to true,
+        "com.android.carrierdefaultapp" to true,
+        "com.android.credentialmanager" to true,
+        "com.android.devicediagnostics" to true,
+        "com.android.wallpaper.livepicker" to true,
+        "com.google.android.healthconnect.controller" to true,
+        "com.google.android.gms.supervision" to true,
+        "com.android.storagemanager" to true,
+        "com.android.bookmarkprovider" to true,
+        "com.google.android.settings.intelligence" to true,
+        "com.android.wallpaper" to true,
+        "com.google.android.apps.wallpaper" to true,
+        "com.android.phone" to true,
+        "com.android.systemui" to true,
+        "com.android.traceur" to true,
+        "com.google.android.cellbroadcastreceiver" to true,
+        "com.android.bluetooth" to true,
+        "com.google.android.apps.restore" to true
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,18 +107,18 @@ class MainActivity: FlutterActivity() {
                         result.error("UNAVAILABLE", "App package name not available.", null)
                     }
                 }
-                "getExclusiveApps" -> {
-                    val exclusiveApps = SharedPrefManager.getAllExclusiveApp(this)
-                    result.success(exclusiveApps.toList())
+                "getInclusiveApps" -> {
+                    val inclusiveApps = SharedPrefManager.getAllInclusiveApp(this)
+                    result.success(inclusiveApps.toList())
                 }
-                "addExclusiveApp" -> {
+                "addInclusiveApp" -> {
                     val packageName = call.arguments as String
-                    SharedPrefManager.addExclusiveAppList(this, packageName)
+                    SharedPrefManager.addInclusiveAppList(this, packageName)
                     result.success(null)
                 }
-                "removeExclusiveApp" -> {
+                "removeInclusiveApp" -> {
                     val packageName = call.arguments as String
-                    SharedPrefManager.removeExclusiveAppList(this, packageName)
+                    SharedPrefManager.removeInclusiveAppList(this, packageName)
                     result.success(null)
                 }
                 else -> result.notImplemented()
@@ -163,17 +208,22 @@ class MainActivity: FlutterActivity() {
             val packageManager = this.packageManager
             val installedPackages = packageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS)
 
-            val allPackageNames = mutableListOf<String>()
+            val allPackages = mutableListOf<Pair<String, String>>()
+            // Filter out unappropriate packages
             for (app in installedPackages) {
-                // Check if the app is a system app
-                if (app.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
-                    // If it's not a system app, add it to the list
-                    val packageName = app.packageName
-                    allPackageNames.add(packageName)
+                val packageName = app.packageName
+                if (NOT_INCLUDE_PACKAGE_MAP[packageName] == true) {
+                    continue
+                }
+                val appName = getAppName(packageName)
+                val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+                if (appName != null && appName != packageName && appName != "Filled" && applicationInfo.icon != 0) {
+                    allPackages.add(packageName to appName)
                 }
             }
-            Log.d("getAllPackageNames", "All package names: $allPackageNames")
-            return allPackageNames
+            // Log.d("getAllPackageNames", "All package names: $allPackages")
+            allPackages.sortBy { it.second }
+            return allPackages.map { it.first }
         } catch (e: Exception) {
             Log.e("getAllPackageNames", "Error retrieving app icon: ${e.message}", e)
             return mutableListOf<String>()
