@@ -1,3 +1,4 @@
+import 'package:prj3/controllers/installed_app_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prj3/controllers/locale_controller.dart';
 import 'package:prj3/widgets/notification_icon.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
+part 'setting.ext.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -15,32 +18,14 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  List<String> allApps = [];
-  List<String> exclusiveApps = [];
-  List<String> selectedApps = [];
   Locale _currentLocale = const Locale('en', 'US');
   final LocaleController localeController = Get.find();
+  final InstalledAppController settingController = Get.find();
 
   @override
   void initState() {
     super.initState();
-    _loadAppData();
     _loadLocale();
-  }
-
-  Future<void> _loadAppData() async {
-    try {
-      final appNames = await PlatformChannels.getAppPackageNames();
-      final exclusiveAppNames = await PlatformChannels.getAllExclusiveApp();
-
-      setState(() {
-        allApps = appNames;
-        exclusiveApps = exclusiveAppNames;
-        selectedApps = List.from(exclusiveApps);
-      });
-    } catch (e) {
-      print("Error loading apps: $e");
-    }
   }
 
   Future<void> _loadLocale() async {
@@ -58,18 +43,6 @@ class _SettingsPageState extends State<SettingsPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('locale', locale.toString());
     localeController.changeLocale(locale.languageCode, locale.countryCode);
-  }
-
-  void _toggleAppSelection(String packageName, bool isSelected) {
-    setState(() {
-      if (isSelected) {
-        selectedApps.add(packageName);
-        PlatformChannels.addExclusiveApp(packageName);
-      } else {
-        selectedApps.remove(packageName);
-        PlatformChannels.removeExclusiveApp(packageName);
-      }
-    });
   }
 
   @override
@@ -128,18 +101,17 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              Intl.message('settings_exclusiveApps',
-                  name: 'settings_exclusiveApps'),
+              Intl.message('settings_inclusiveApps',
+                  name: 'settings_inclusiveApps'),
               style: const TextStyle(
                 fontSize: 18,
               ),
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: allApps.length,
+                  itemCount: settingController.allApps.length,
                   itemBuilder: (context, index) {
-                    final appName = allApps[index];
-                    final isSelected = selectedApps.contains(appName);
+                    final appName = settingController.allApps[index];
 
                     return FutureBuilder<String?>(
                       future: AppIconManager.getCachedAppName(appName),
@@ -149,17 +121,10 @@ class _SettingsPageState extends State<SettingsPage> {
                           displayName = snapshot.data ?? appName;
                         }
 
-                        return ListTile(
-                          leading: NotificationIcon(packageName: appName),
-                          title: Text(displayName),
-                          trailing: Checkbox(
-                            value: isSelected,
-                            onChanged: (bool? value) {
-                              if (value != null) {
-                                _toggleAppSelection(appName, value);
-                              }
-                            },
-                          ),
+                        return SingleSettingTile(
+                          index: index,
+                          appName: appName,
+                          displayName: displayName,
                         );
                       },
                     );
