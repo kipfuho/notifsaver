@@ -1,7 +1,6 @@
 import 'package:prj3/controllers/filter_controller.dart';
+import 'package:prj3/controllers/installed_app_controller.dart';
 import 'package:prj3/widgets/notification_icon.dart';
-import 'package:prj3/utils/app_manager.dart';
-import 'package:prj3/platform_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,9 +12,9 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
+  final InstalledAppController _settingController = Get.find();
   final FilterController _filterController = Get.find();
-  List<String> allApps = [];
-  List<String> selectedApps = [];
+  final selectedApps = <String, dynamic>{}.obs;
   String searchText = '';
 
   @override
@@ -26,10 +25,10 @@ class _FilterScreenState extends State<FilterScreen> {
 
   Future<void> _loadData() async {
     try {
-      final appNames = await PlatformChannels.getAppPackageNames();
+      for (String appName in _filterController.getSearchApps()) {
+        selectedApps[appName] = true;
+      }
       setState(() {
-        allApps = appNames;
-        selectedApps = _filterController.getSearchApps();
         searchText = _filterController.getSearchText();
       });
     } catch (e) {
@@ -39,7 +38,7 @@ class _FilterScreenState extends State<FilterScreen> {
 
   void applyFilter() {
     _filterController.setSearchText(searchText);
-    _filterController.setSearchApps(selectedApps);
+    _filterController.setSearchApps(selectedApps.keys.toList());
   }
 
   @override
@@ -65,34 +64,20 @@ class _FilterScreenState extends State<FilterScreen> {
             const SizedBox(height: 10),
             Flexible(
               child: ListView.builder(
-                itemCount: allApps.length,
+                itemCount: _settingController.allApps.length,
                 addAutomaticKeepAlives: true,
                 itemBuilder: (context, index) {
-                  final appName = allApps[index];
-                  return FutureBuilder<String?>(
-                    future: AppIconManager.getCachedAppName(appName),
-                    builder: (context, snapshot) {
-                      String displayName = appName;
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        displayName = snapshot.data ?? appName;
-                      }
-                      return ListTile(
-                        leading: NotificationIcon(packageName: appName),
-                        title: Text(displayName),
-                        trailing: Checkbox(
-                          value: selectedApps.contains(appName),
+                  final appName = _settingController.allApps[index];
+                  return ListTile(
+                    leading: NotificationIcon(packageName: appName),
+                    title: Obx(() => Text(
+                        _settingController.displayAppName[appName] ?? appName)),
+                    trailing: Obx(() => Checkbox(
+                          value: selectedApps[appName] ?? false,
                           onChanged: (bool? isChecked) {
-                            setState(() {
-                              if (isChecked == true) {
-                                selectedApps.add(appName);
-                              } else {
-                                selectedApps.remove(appName);
-                              }
-                            });
+                            selectedApps[appName] = isChecked;
                           },
-                        ),
-                      );
-                    },
+                        )),
                   );
                 },
               ),
