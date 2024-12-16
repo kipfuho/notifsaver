@@ -15,7 +15,8 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final GoogleService _googleService = GoogleService();
-  final UserController _userController = Get.find(); // Get the UserController
+  final UserController _userController = Get.find();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -23,6 +24,10 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _signInWithGoogle() async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       final user = await _googleService.signInWithGoogle();
       if (user != null) {
@@ -35,6 +40,10 @@ class _SignInScreenState extends State<SignInScreen> {
       }
     } catch (err) {
       HotMessage.showToast('Error', err.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -58,10 +67,13 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _signInWithGoogle,
-                child: Text(Intl.message('login_google', name: 'login_google')),
-              ),
+              if (isLoading) const CircularProgressIndicator(),
+              if (!isLoading)
+                ElevatedButton(
+                  onPressed: _signInWithGoogle,
+                  child:
+                      Text(Intl.message('login_google', name: 'login_google')),
+                ),
             ],
           ),
         ),
