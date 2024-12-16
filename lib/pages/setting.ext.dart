@@ -26,7 +26,8 @@ class SingleSettingTile extends StatelessWidget {
             NotificationIcon(packageName: appName),
           ],
         ),
-        title: Obx(() => Text(settingController.displayAppName[appName])),
+        title: Obx(
+            () => Text(settingController.displayAppName[appName] ?? appName)),
         trailing: Obx(
           () => Checkbox(
             value: settingController.settingSelectedApps[appName] ?? false,
