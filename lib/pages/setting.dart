@@ -2,7 +2,6 @@ import 'package:prj3/controllers/installed_app_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prj3/controllers/locale_controller.dart';
 import 'package:prj3/widgets/notification_icon.dart';
-import 'package:prj3/utils/app_manager.dart';
 import 'package:prj3/platform_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -119,22 +118,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   itemCount: settingController.allApps.length,
                   itemBuilder: (context, index) {
                     final appName = settingController.allApps[index];
-
-                    return FutureBuilder<String?>(
-                      future: AppIconManager.getCachedAppName(appName),
-                      builder: (context, snapshot) {
-                        String displayName = appName;
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          displayName = snapshot.data ?? appName;
-                        }
-
-                        return SingleSettingTile(
-                          index: index,
-                          appName: appName,
-                          displayName: displayName,
-                        );
-                      },
-                    );
+                    return SingleSettingTile(index: index, appName: appName);
                   }),
             ),
           ],
