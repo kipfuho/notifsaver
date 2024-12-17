@@ -4,6 +4,7 @@ class PagingListController extends GetxController {
   final String notiType;
   var pageSize = 20.obs;
   late final RxList<dynamic> itemList;
+  final RxInt currentListSize = 0.obs;
   final PagingController<int, dynamic> _pagingCtl =
       PagingController(firstPageKey: 0);
   final NotificationController _notiCtl = Get.find();
@@ -15,10 +16,24 @@ class PagingListController extends GetxController {
     super.onInit();
 
     itemList = _notiCtl.getNotificationList(notiType);
+    currentListSize.value = itemList.length;
 
-    // When new notification is added to the list, show it in the screen
-    ever(itemList, (_) {
-      _fetchPage(_pagingCtl.nextPageKey ?? 0);
+    ever(itemList, (newList) {
+      if (newList.length > currentListSize.value &&
+          (_pagingCtl.itemList?.length ?? 0) + pageSize.value >
+              newList.length) {
+        _fetchPage(_pagingCtl.nextPageKey ?? 0);
+        return;
+      }
+
+      if (newList.length < currentListSize.value) {
+        // Update PagingController's state manually
+        _pagingCtl.value = PagingState<int, Map<String, dynamic>>(
+          itemList: List<Map<String, dynamic>>.from(newList),
+          nextPageKey: _pagingCtl.nextPageKey,
+          error: null,
+        );
+      }
     });
 
     _pagingCtl.addPageRequestListener((pageKey) {
@@ -28,7 +43,6 @@ class PagingListController extends GetxController {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      print('fetch');
       final startIndex = _pagingCtl.itemList?.length ?? 0;
       final endIndex = startIndex + pageSize.value;
 

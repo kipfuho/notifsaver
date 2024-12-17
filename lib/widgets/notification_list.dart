@@ -24,7 +24,8 @@ class _NotificationListState extends State<NotificationList>
   @override
   void initState() {
     super.initState();
-    _pListCtl = Get.put(PagingListController(widget.notificationType));
+    _pListCtl = Get.put(PagingListController(widget.notificationType),
+        tag: widget.notificationType);
   }
 
   @override
@@ -43,8 +44,9 @@ class _NotificationListState extends State<NotificationList>
           itemBuilder: (context, notification, index) {
         return GestureDetector(
           onTap: () {
-            // Mark notification as read and navigate to detail page
-            notificationController.markAsRead(notification['notificationId']);
+            if (notification['status'] == 'unread') {
+              notificationController.markAsRead(notification['notificationId']);
+            }
             Navigator.push(
               context,
               MaterialPageRoute(

@@ -14,7 +14,7 @@ class NotificationDetail extends StatelessWidget {
     required this.notification,
     NotificationController? notificationController,
   })  : notificationController = notificationController ?? Get.find(),
-        notiType = notification['status'].obs;
+        notiType = RxString(notification['status']);
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +90,9 @@ class NotificationDetail extends StatelessWidget {
     if (notiType == 'read') {
       return ElevatedButton(
         onPressed: () async {
+          this.notiType.value = 'saved';
           notificationController
               .saveNotification(notification['notificationId']);
-          Navigator.pop(context);
         },
         child: Text(Intl.message('save', name: 'save')),
       );
@@ -100,9 +100,9 @@ class NotificationDetail extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: () async {
+        this.notiType.value = 'read';
         notificationController
             .unSaveNotification(notification['notificationId']);
-        Navigator.pop(context);
       },
       child: Text(Intl.message('unsave', name: 'unsave')),
     );
