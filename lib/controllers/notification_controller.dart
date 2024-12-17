@@ -96,7 +96,7 @@ class NotificationController extends GetxController {
 
   Future<void> _filterNotifications() async {
     if (notificationBox == null) return;
-  
+
     unreadNotifications.value = notificationBox!.values
         .where((notification) => notification['status'] == 'unread')
         .toList();
