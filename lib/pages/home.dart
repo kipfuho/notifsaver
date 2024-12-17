@@ -59,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Hide back button
         title: Text(Intl.message('home', name: 'home')),
         actions: [
           IconButton(

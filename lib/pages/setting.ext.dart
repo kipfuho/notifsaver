@@ -31,7 +31,12 @@ class SingleSettingTile extends StatelessWidget {
         trailing: Obx(
           () => Checkbox(
             value: settingController.settingSelectedApps[appName] ?? false,
-            onChanged: (bool? value) {
+            onChanged: (bool? value) async {
+              if (value == true) {
+                await PlatformChannels.addInclusiveApp(appName);
+              } else {
+                await PlatformChannels.removeInclusiveApp(appName);
+              }
               settingController.setSettingAppSelection(appName, value ?? false);
             },
           ),

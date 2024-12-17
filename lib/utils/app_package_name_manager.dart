@@ -44,9 +44,4 @@ class AppPackageNameManager {
       return [];
     }
   }
-
-  static Future<void> addNewAppToInclusiveList(packageName) async {
-    await PlatformChannels.addInclusiveApp(packageName);
-    return;
-  }
 }
