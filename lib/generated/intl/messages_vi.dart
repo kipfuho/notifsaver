@@ -22,11 +22,22 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "big_text": MessageLookupByLibrary.simpleMessage("Nội dung dài"),
+        "category": MessageLookupByLibrary.simpleMessage("Danh mục"),
+        "channel_id": MessageLookupByLibrary.simpleMessage("Id kênh"),
         "home": MessageLookupByLibrary.simpleMessage("Trang chủ"),
         "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
         "login_google":
             MessageLookupByLibrary.simpleMessage("Đăng nhập với Google"),
+        "no_notifications":
+            MessageLookupByLibrary.simpleMessage("Không có thông báo nào"),
+        "notification_detail":
+            MessageLookupByLibrary.simpleMessage("Chi tiết thông báo"),
+        "post_time":
+            MessageLookupByLibrary.simpleMessage("Thời gian đăng thông báo"),
+        "priority": MessageLookupByLibrary.simpleMessage("Độ ưu tiên"),
         "read": MessageLookupByLibrary.simpleMessage("Đã đọc"),
+        "save": MessageLookupByLibrary.simpleMessage("Lưu"),
         "saved": MessageLookupByLibrary.simpleMessage("Đã lưu"),
         "settings_inclusiveApps": MessageLookupByLibrary.simpleMessage(
             "Các ứng dụng cho phép đọc thông báo"),
@@ -36,6 +47,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_selectLanguage":
             MessageLookupByLibrary.simpleMessage("Chọn ngôn ngữ"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Cài đặt"),
-        "unread": MessageLookupByLibrary.simpleMessage("Chưa đọc")
+        "status": MessageLookupByLibrary.simpleMessage("Trạng thái"),
+        "sub_text": MessageLookupByLibrary.simpleMessage("Nội dung phụ"),
+        "tag": MessageLookupByLibrary.simpleMessage("Nhãn"),
+        "text": MessageLookupByLibrary.simpleMessage("Nội dung"),
+        "ticker_text": MessageLookupByLibrary.simpleMessage("Nội dung cuộn"),
+        "title": MessageLookupByLibrary.simpleMessage("Tiêu đề"),
+        "unread": MessageLookupByLibrary.simpleMessage("Bỏ lưu")
       };
 }

@@ -22,11 +22,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "big_text": MessageLookupByLibrary.simpleMessage("Big Text"),
+        "category": MessageLookupByLibrary.simpleMessage("Category"),
+        "channel_id": MessageLookupByLibrary.simpleMessage("Channel Id"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "login": MessageLookupByLibrary.simpleMessage("Log in"),
         "login_google":
             MessageLookupByLibrary.simpleMessage("Log in with Google"),
+        "no_notifications":
+            MessageLookupByLibrary.simpleMessage("There\'s no notifications"),
+        "notification_detail":
+            MessageLookupByLibrary.simpleMessage("Notification detail"),
+        "post_time": MessageLookupByLibrary.simpleMessage("Post Time"),
+        "priority": MessageLookupByLibrary.simpleMessage("Priority"),
         "read": MessageLookupByLibrary.simpleMessage("Read"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saved": MessageLookupByLibrary.simpleMessage("Saved"),
         "settings_inclusiveApps": MessageLookupByLibrary.simpleMessage(
             "Apps to read notifications from"),
@@ -36,6 +46,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_selectLanguage":
             MessageLookupByLibrary.simpleMessage("Select Language"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Settings"),
-        "unread": MessageLookupByLibrary.simpleMessage("Unread")
+        "status": MessageLookupByLibrary.simpleMessage("Status"),
+        "sub_text": MessageLookupByLibrary.simpleMessage("Sub Text"),
+        "tag": MessageLookupByLibrary.simpleMessage("Tag"),
+        "text": MessageLookupByLibrary.simpleMessage("Text"),
+        "ticker_text": MessageLookupByLibrary.simpleMessage("Ticker Text"),
+        "title": MessageLookupByLibrary.simpleMessage("Title"),
+        "unread": MessageLookupByLibrary.simpleMessage("Unsave")
       };
 }

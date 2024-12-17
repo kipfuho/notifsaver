@@ -8,5 +8,20 @@
   "login_google": "Đăng nhập với Google",
   "unread": "Chưa đọc",
   "read": "Đã đọc",
-  "saved": "Đã lưu"
+  "saved": "Đã lưu",
+  "save": "Lưu",
+  "unread": "Bỏ lưu",
+  "no_notifications": "Không có thông báo nào",
+  "notification_detail": "Chi tiết thông báo",
+  "tag": "Nhãn",
+  "post_time": "Thời gian đăng thông báo",
+  "title": "Tiêu đề",
+  "text": "Nội dung",
+  "sub_text": "Nội dung phụ",
+  "big_text": "Nội dung dài",
+  "category": "Danh mục",
+  "ticker_text": "Nội dung cuộn",
+  "priority": "Độ ưu tiên",
+  "channel_id": "Id kênh",
+  "status": "Trạng thái"
 }

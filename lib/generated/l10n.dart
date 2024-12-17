@@ -120,10 +120,10 @@ class S {
     );
   }
 
-  /// `Unread`
+  /// `Unsave`
   String get unread {
     return Intl.message(
-      'Unread',
+      'Unsave',
       name: 'unread',
       desc: '',
       args: [],
@@ -145,6 +145,146 @@ class S {
     return Intl.message(
       'Saved',
       name: 'saved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There's no notifications`
+  String get no_notifications {
+    return Intl.message(
+      'There\'s no notifications',
+      name: 'no_notifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification detail`
+  String get notification_detail {
+    return Intl.message(
+      'Notification detail',
+      name: 'notification_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag`
+  String get tag {
+    return Intl.message(
+      'Tag',
+      name: 'tag',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Post Time`
+  String get post_time {
+    return Intl.message(
+      'Post Time',
+      name: 'post_time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Title`
+  String get title {
+    return Intl.message(
+      'Title',
+      name: 'title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Text`
+  String get text {
+    return Intl.message(
+      'Text',
+      name: 'text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sub Text`
+  String get sub_text {
+    return Intl.message(
+      'Sub Text',
+      name: 'sub_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Big Text`
+  String get big_text {
+    return Intl.message(
+      'Big Text',
+      name: 'big_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Category`
+  String get category {
+    return Intl.message(
+      'Category',
+      name: 'category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ticker Text`
+  String get ticker_text {
+    return Intl.message(
+      'Ticker Text',
+      name: 'ticker_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Priority`
+  String get priority {
+    return Intl.message(
+      'Priority',
+      name: 'priority',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Channel Id`
+  String get channel_id {
+    return Intl.message(
+      'Channel Id',
+      name: 'channel_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Status`
+  String get status {
+    return Intl.message(
+      'Status',
+      name: 'status',
       desc: '',
       args: [],
     );

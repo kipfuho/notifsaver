@@ -1,9 +1,10 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:prj3/controllers/notification_controller.dart';
 import 'package:prj3/widgets/notification_detail.dart';
 import 'package:prj3/widgets/notification_icon.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 import 'dart:async';
 
 part 'notification_list.ext.dart';
@@ -41,45 +42,51 @@ class _NotificationListState extends State<NotificationList>
     return PagedListView<int, dynamic>(
       pagingController: _pListCtl._pagingCtl,
       builderDelegate: PagedChildBuilderDelegate<dynamic>(
-          itemBuilder: (context, notification, index) {
-        return GestureDetector(
-          onTap: () {
-            if (notification['status'] == 'unread') {
-              notificationController.markAsRead(notification['notificationId']);
-            }
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    NotificationDetail(notification: notification),
-              ),
-            );
-          },
-          child: ListTile(
-            leading: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${index + 1}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+        itemBuilder: (context, notification, index) {
+          return GestureDetector(
+            onTap: () {
+              if (notification['status'] == 'unread') {
+                notificationController
+                    .markAsRead(notification['notificationId']);
+              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      NotificationDetail(notification: notification),
                 ),
-                const SizedBox(width: 8),
-                NotificationIcon(packageName: notification['packageName']),
-              ],
+              );
+            },
+            child: ListTile(
+              leading: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${index + 1}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8),
+                  NotificationIcon(packageName: notification['packageName']),
+                ],
+              ),
+              title: Text(
+                notification['title'] ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                notification['text'] ?? '',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            title: Text(
-              notification['title'] ?? '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            subtitle: Text(
-              notification['text'] ?? '',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        );
-      }),
+          );
+        },
+        noItemsFoundIndicatorBuilder: (context) => Center(
+          child: Text(Intl.message('no_notifications', name: 'no_notifications'),
+              style: const TextStyle(fontSize: 24)),
+        ),
+      ),
     );
   }
 

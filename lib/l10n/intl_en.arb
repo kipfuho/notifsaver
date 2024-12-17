@@ -8,5 +8,20 @@
   "login_google": "Log in with Google",
   "unread": "Unread",
   "read": "Read",
-  "saved": "Saved"
+  "saved": "Saved",
+  "save": "Save",
+  "unread": "Unsave",
+  "no_notifications": "There's no notifications",
+  "notification_detail": "Notification detail",
+  "tag": "Tag",
+  "post_time": "Post Time",
+  "title": "Title",
+  "text": "Text",
+  "sub_text": "Sub Text",
+  "big_text": "Big Text",
+  "category": "Category",
+  "ticker_text": "Ticker Text",
+  "priority": "Priority",
+  "channel_id": "Channel Id",
+  "status": "Status"
 }
