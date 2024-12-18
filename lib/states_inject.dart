@@ -1,4 +1,5 @@
 import 'package:prj3/controllers/installed_app_controller.dart';
+import 'package:prj3/controllers/network_controller.dart';
 import 'package:prj3/controllers/notification_controller.dart';
 import 'package:prj3/controllers/locale_controller.dart';
 import 'package:prj3/controllers/filter_controller.dart';
@@ -22,5 +23,8 @@ class StateManagementInjection {
 
     // Initialize FilterController
     Get.put(InstalledAppController());
+
+    // Initialize FilterController
+    Get.put(NetworkController());
   }
 }
