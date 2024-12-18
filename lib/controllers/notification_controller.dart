@@ -110,33 +110,54 @@ class NotificationController extends GetxController {
         .toList();
   }
 
-  Future<void> markAsRead(dynamic notificationId) async {
+  Future<void> markAsRead(dynamic notificationId, {int? index}) async {
     var notification = notificationBox!.get(notificationId);
     if (notification != null) {
       notification['status'] = 'read';
       notification['updatedAt'] = DateTime.now();
       await notificationBox!.put(notificationId, notification);
-      await _filterNotifications();
+
+      readNotifications.add(notification);
+      if (index != null) {
+        unreadNotifications.removeAt(index);
+      } else {
+        unreadNotifications.removeWhere(
+            (notification) => notification['notificationId'] == notificationId);
+      }
     }
   }
 
-  Future<void> saveNotification(dynamic notificationId) async {
+  Future<void> saveNotification(dynamic notificationId, {int? index}) async {
     var notification = notificationBox!.get(notificationId);
     if (notification != null) {
       notification['status'] = 'saved';
       notification['updatedAt'] = DateTime.now();
       await notificationBox!.put(notificationId, notification);
-      await _filterNotifications();
+
+      savedNotifications.add(notification);
+      if (index != null) {
+        readNotifications.removeAt(index);
+      } else {
+        readNotifications.removeWhere(
+            (notification) => notification['notificationId'] == notificationId);
+      }
     }
   }
 
-  Future<void> unSaveNotification(dynamic notificationId) async {
+  Future<void> unSaveNotification(dynamic notificationId, {int? index}) async {
     var notification = notificationBox!.get(notificationId);
     if (notification != null) {
       notification['status'] = 'read';
       notification['updatedAt'] = DateTime.now();
       await notificationBox!.put(notificationId, notification);
-      await _filterNotifications();
+
+      readNotifications.add(notification);
+      if (index != null) {
+        savedNotifications.removeAt(index);
+      } else {
+        savedNotifications.removeWhere(
+            (notification) => notification['notificationId'] == notificationId);
+      }
     }
   }
 
@@ -146,7 +167,13 @@ class NotificationController extends GetxController {
       notification['status'] = 'deleted';
       notification['updatedAt'] = DateTime.now();
       await notificationBox!.put(notificationId, notification);
-      await _filterNotifications();
+
+      savedNotifications.removeWhere(
+          (notification) => notification['notificationId'] == notificationId);
+      readNotifications.removeWhere(
+          (notification) => notification['notificationId'] == notificationId);
+      unreadNotifications.removeWhere(
+          (notification) => notification['notificationId'] == notificationId);
     }
   }
 

@@ -6,12 +6,14 @@ import 'package:get/get.dart';
 
 class NotificationDetail extends StatelessWidget {
   final Map<dynamic, dynamic> notification;
+  final int index;
   final NotificationController notificationController;
   final RxString notiType;
 
   NotificationDetail({
     super.key,
     required this.notification,
+    required this.index,
     NotificationController? notificationController,
   })  : notificationController = notificationController ?? Get.find(),
         notiType = RxString(notification['status']);
@@ -92,7 +94,7 @@ class NotificationDetail extends StatelessWidget {
         onPressed: () async {
           this.notiType.value = 'saved';
           notificationController
-              .saveNotification(notification['notificationId']);
+              .saveNotification(notification['notificationId'], index: index);
         },
         child: Text(Intl.message('save', name: 'save')),
       );
@@ -102,7 +104,7 @@ class NotificationDetail extends StatelessWidget {
       onPressed: () async {
         this.notiType.value = 'read';
         notificationController
-            .unSaveNotification(notification['notificationId']);
+            .unSaveNotification(notification['notificationId'], index: index);
       },
       child: Text(Intl.message('unsave', name: 'unsave')),
     );

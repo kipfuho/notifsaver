@@ -47,13 +47,13 @@ class _NotificationListState extends State<NotificationList>
             onTap: () {
               if (notification['status'] == 'unread') {
                 notificationController
-                    .markAsRead(notification['notificationId']);
+                    .markAsRead(notification['notificationId'], index: index);
               }
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      NotificationDetail(notification: notification),
+                  builder: (context) => NotificationDetail(
+                      notification: notification, index: index),
                 ),
               );
             },
@@ -83,7 +83,8 @@ class _NotificationListState extends State<NotificationList>
           );
         },
         noItemsFoundIndicatorBuilder: (context) => Center(
-          child: Text(Intl.message('no_notifications', name: 'no_notifications'),
+          child: Text(
+              Intl.message('no_notifications', name: 'no_notifications'),
               style: const TextStyle(fontSize: 24)),
         ),
       ),
