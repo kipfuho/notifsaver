@@ -63,9 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(Intl.message('home', name: 'home')),
         actions: [
           IconButton(
-            icon: Icon(filterController.isSearching.value
+            icon: Obx(() => Icon(filterController.isSearching.value
                 ? Icons.close
-                : Icons.search),
+                : Icons.search)),
             onPressed: () {
               if (filterController.isSearching.value) {
                 filterController.clearSearch();
@@ -97,6 +97,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ElevatedButton(
                 onPressed: deleteHiveBox,
                 child: const Text('Delete Hive Data'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  notificationController.addNotificationForTest();
+                },
+                child: const Text('Add Data'),
               ),
             ],
           ),

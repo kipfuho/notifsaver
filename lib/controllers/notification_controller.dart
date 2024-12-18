@@ -120,11 +120,17 @@ class NotificationController extends GetxController {
         .toList();
 
     readNotifications.value = notificationBox!.values
-        .where((notification) => notification['status'] == 'read')
+        .where((notification) =>
+            notification['status'] == 'read' &&
+            _compareToSearchQuery(notification,
+                searchText: searchText, searchApps: searchApps))
         .toList();
 
     savedNotifications.value = notificationBox!.values
-        .where((notification) => notification['status'] == 'saved')
+        .where((notification) =>
+            notification['status'] == 'saved' &&
+            _compareToSearchQuery(notification,
+                searchText: searchText, searchApps: searchApps))
         .toList();
 
     isLoading.value = false;
@@ -208,5 +214,18 @@ class NotificationController extends GetxController {
       return savedNotifications;
     }
     return [].obs;
+  }
+
+  T deepClone<T>(T object) {
+    return jsonDecode(jsonEncode(object)) as T;
+  }
+
+  Future<void> addNotificationForTest() async {
+    var notification = Map.from(notificationBox!.values.first);
+    notification['notificationId'] =
+        '${notification['notificationId']}_${DateTime.now().millisecondsSinceEpoch}';
+    await notificationBox!.put(notification['notificationId'], notification);
+
+    unreadNotifications.add(notification);
   }
 }

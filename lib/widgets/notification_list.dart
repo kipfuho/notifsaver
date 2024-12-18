@@ -33,6 +33,7 @@ class _NotificationListState extends State<NotificationList>
     ever(
       _filterCtl.isSearching,
       (bool newIsSearching) async {
+        print(newIsSearching);
         if (newIsSearching) {
           await _notiCtl.filterNotifications(
             searchApps: _filterCtl.searchParams['searchApps'],
@@ -47,6 +48,7 @@ class _NotificationListState extends State<NotificationList>
   @override
   void dispose() {
     _pListCtl.dispose();
+    _filterCtl.dispose();
     super.dispose();
   }
 

@@ -37,8 +37,8 @@ class _FilterScreenState extends State<FilterScreen> {
   }
 
   void applyFilter() {
-    _filterController.setSearchText(searchText);
-    _filterController.setSearchApps(selectedApps.keys.toList());
+    _filterController.setSearchParams(
+        searchText: searchText, selectedApps: selectedApps.keys.toList());
   }
 
   @override

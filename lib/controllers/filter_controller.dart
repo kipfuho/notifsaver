@@ -20,13 +20,13 @@ class FilterController extends GetxController {
     return [];
   }
 
-  void setSearchText(String searchText) {
-    searchParams['searchText'] = searchText.toLowerCase();
-    isSearching.value = true;
-  }
-
-  void setSearchApps(List<String> appPackageNames) {
-    searchParams['searchApps'] = appPackageNames;
+  void setSearchParams({String? searchText, List<String>? selectedApps}) {
+    if (searchText!.isNotEmpty) {
+      searchParams['searchText'] = searchText.toLowerCase();
+    }
+    if (selectedApps!.isNotEmpty) {
+      searchParams['searchApps'] = selectedApps;
+    }
     isSearching.value = true;
   }
 
