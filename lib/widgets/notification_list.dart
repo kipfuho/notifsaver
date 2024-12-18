@@ -1,4 +1,5 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:prj3/controllers/filter_controller.dart';
 import 'package:prj3/controllers/notification_controller.dart';
 import 'package:prj3/widgets/notification_detail.dart';
 import 'package:prj3/widgets/notification_icon.dart';
@@ -20,13 +21,27 @@ class NotificationList extends StatefulWidget {
 class _NotificationListState extends State<NotificationList>
     with AutomaticKeepAliveClientMixin {
   late final PagingListController _pListCtl;
-  final NotificationController notificationController = Get.find();
+  final NotificationController _notiCtl = Get.find();
+  final FilterController _filterCtl = Get.find();
 
   @override
   void initState() {
     super.initState();
     _pListCtl = Get.put(PagingListController(widget.notificationType),
         tag: widget.notificationType);
+
+    ever(
+      _filterCtl.isSearching,
+      (bool newIsSearching) async {
+        if (newIsSearching) {
+          await _notiCtl.filterNotifications(
+            searchApps: _filterCtl.searchParams['searchApps'],
+            searchText: _filterCtl.searchParams['searchText'],
+          );
+        }
+        _pListCtl.refreshList();
+      },
+    );
   }
 
   @override
@@ -46,8 +61,8 @@ class _NotificationListState extends State<NotificationList>
           return GestureDetector(
             onTap: () {
               if (notification['status'] == 'unread') {
-                notificationController
-                    .markAsRead(notification['notificationId'], index: index);
+                _notiCtl.markAsRead(notification['notificationId'],
+                    index: index);
               }
               Navigator.push(
                 context,

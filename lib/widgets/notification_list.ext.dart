@@ -19,6 +19,9 @@ class PagingListController extends GetxController {
     currentListSize.value = itemList.length;
 
     ever(itemList, (newList) {
+      if (_notiCtl.isLoading.value) {
+        return;
+      }
       if (newList.length > currentListSize.value &&
           (_pagingCtl.itemList?.length ?? 0) + pageSize.value >
               newList.length) {
@@ -82,6 +85,10 @@ class PagingListController extends GetxController {
         error: null,
       );
     }
+  }
+
+  void refreshList() {
+    _pagingCtl.refresh();
   }
 
   @override

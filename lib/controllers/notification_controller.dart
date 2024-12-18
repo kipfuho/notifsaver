@@ -11,10 +11,10 @@ class NotificationController extends GetxController {
   var unreadNotifications = <dynamic>[].obs;
   var readNotifications = <dynamic>[].obs;
   var savedNotifications = <dynamic>[].obs;
+  var isLoading = false.obs;
 
-  final List<Map<String, dynamic>> _notificationQueue =
-      []; // Queue for notifications
-  late StreamSubscription _queueProcessor; // Subscription to process the queue
+  final List<Map<String, dynamic>> _notificationQueue = [];
+  late StreamSubscription _queueProcessor;
   late Box? notificationBox;
 
   @override
@@ -22,7 +22,7 @@ class NotificationController extends GetxController {
     super.onInit();
     _initNotificationBox();
     _listenToNotificationStream();
-    _startQueueProcessor(); // Start the queue processor on init
+    _startQueueProcessor();
   }
 
   @override
@@ -86,19 +86,37 @@ class NotificationController extends GetxController {
     await notificationBox!.put(notification['notificationId'], notification);
     await PlatformChannels.removeNotificationFromTempStorage(
         notification['notificationId']);
-    await _filterNotifications();
+    await filterNotifications();
   }
 
   Future<void> _initNotificationBox() async {
     notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
-    await _filterNotifications();
+    await filterNotifications();
   }
 
-  Future<void> _filterNotifications() async {
+  bool _compareToSearchQuery(dynamic notification,
+      {String? searchText, List<String>? searchApps}) {
+    bool containSearchText = true;
+    bool isInSearchApps = true;
+    if (searchText != null && searchText.isNotEmpty) {
+      containSearchText = notification['text'].contains('searchText');
+    }
+    if (searchApps != null && searchApps != []) {
+      isInSearchApps = searchApps.contains(notification['packageName']);
+    }
+    return containSearchText && isInSearchApps;
+  }
+
+  Future<void> filterNotifications(
+      {String? searchText, List<String>? searchApps}) async {
     if (notificationBox == null) return;
+    isLoading.value = true;
 
     unreadNotifications.value = notificationBox!.values
-        .where((notification) => notification['status'] == 'unread')
+        .where((notification) =>
+            notification['status'] == 'unread' &&
+            _compareToSearchQuery(notification,
+                searchText: searchText, searchApps: searchApps))
         .toList();
 
     readNotifications.value = notificationBox!.values
@@ -108,6 +126,8 @@ class NotificationController extends GetxController {
     savedNotifications.value = notificationBox!.values
         .where((notification) => notification['status'] == 'saved')
         .toList();
+
+    isLoading.value = false;
   }
 
   Future<void> markAsRead(dynamic notificationId, {int? index}) async {
