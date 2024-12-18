@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:prj3/firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:prj3/states_inject.dart';
-import 'package:prj3/storages_inject.dart';
+import 'package:prj3/jobs_inject.dart';
 import 'package:prj3/generated/l10n.dart';
 
 import 'pages/sign_in.dart';
@@ -16,7 +16,7 @@ void main() async {
   );
 
   // Inject Storage management
-  await StorageManagementInjection.init();
+  await AutoJobManagementInjection.init();
 
   // Inject states management
   StateManagementInjection.init();

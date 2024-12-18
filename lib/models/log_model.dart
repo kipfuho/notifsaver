@@ -29,10 +29,11 @@ class LogModel {
 
   static Future<void> addLog(String logType, String message) async {
     // Get the directory for storing Hive data
-    if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
+    if (!Hive.isBoxOpen(AppConstants.logs)) {
       var appDir = await getApplicationDocumentsDirectory();
       Hive.init(appDir.path);
     }
+
     var logBox = await Hive.openBox(AppConstants.logs);
     LogModel newLog = LogModel(
         type: logType, timestamp: DateTime.now().toString(), message: message);

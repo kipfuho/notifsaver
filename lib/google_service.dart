@@ -27,7 +27,7 @@ class GoogleService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
-      drive.DriveApi.driveFileScope,  // Grants file access to Google Drive
+      drive.DriveApi.driveFileScope, // Grants file access to Google Drive
     ],
   );
 
@@ -57,6 +57,37 @@ class GoogleService {
     await _auth.signOut();
   }
 
+  Future<String> getFolderId(drive.DriveApi driveApi, String folderName) async {
+    try {
+      var query =
+          "mimeType='application/vnd.google-apps.folder' and name='$folderName' and trashed=false";
+      var fileList = await driveApi.files.list(q: query);
+
+      if (fileList.files != null && fileList.files!.isNotEmpty) {
+        return fileList.files!.first.id ?? 'root';
+      }
+      return createFolder(driveApi, folderName);
+    } catch (e) {
+      print("Error searching for folder: $e");
+      return 'root';
+    }
+  }
+
+  Future<String> createFolder(
+      drive.DriveApi driveApi, String folderName) async {
+    try {
+      var folder = drive.File()
+        ..name = folderName
+        ..mimeType = "application/vnd.google-apps.folder";
+
+      var createdFolder = await driveApi.files.create(folder);
+      return createdFolder.id ?? 'root';
+    } catch (e) {
+      print("Error creating folder: $e");
+      return 'root';
+    }
+  }
+
   // Get Google Drive API client using Firebase access token
   Future<drive.DriveApi?> getDriveApi() async {
     User? user = _auth.currentUser;
@@ -66,6 +97,7 @@ class GoogleService {
     final idToken = await user.getIdToken();
     final authenticateClient = AuthenticatedClient(idToken!, http.Client());
 
-    return drive.DriveApi(authenticateClient); // Return the Google Drive API client
+    return drive.DriveApi(
+        authenticateClient); // Return the Google Drive API client
   }
 }
