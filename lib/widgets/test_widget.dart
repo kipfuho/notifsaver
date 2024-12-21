@@ -45,8 +45,6 @@ class _TestAppState extends State<TestApp> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      print('fetch');
-      print(_listController.list.length);
       final startIndex = _pagingController?.itemList?.length ?? 0;
       final endIndex = startIndex + pageSize;
 

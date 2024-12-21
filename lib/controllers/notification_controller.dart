@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:prj3/constant.dart';
+import 'package:prj3/models/log_model.dart';
 import 'package:prj3/platform_channel.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -37,7 +38,7 @@ class NotificationController extends GetxController {
     try {
       PlatformChannels.openNotificationSettings();
     } on PlatformException catch (e) {
-      print("Failed to open notification settings: '${e.message}'");
+      LogModel.logError("Failed to open notification settings: '${e.message}'");
     }
   }
 

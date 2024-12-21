@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:prj3/models/log_model.dart';
 import 'package:prj3/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -52,7 +53,6 @@ class GoogleService {
     // Save credentials securely
     await SecureStorage.writeSecureStorage(
         'userAccessToken', googleAuth.accessToken);
-    print(googleAuth.accessToken);
     return userCredential.user;
   }
 
@@ -73,7 +73,7 @@ class GoogleService {
       }
       return createFolder(driveApi, folderName);
     } catch (e) {
-      print("Error searching for folder: $e");
+      LogModel.logError("Error searching for folder: $e");
       return 'root';
     }
   }
@@ -88,7 +88,7 @@ class GoogleService {
       var createdFolder = await driveApi.files.create(folder);
       return createdFolder.id ?? 'root';
     } catch (e) {
-      print("Error creating folder: $e");
+      LogModel.logError("Error creating folder: $e");
       return 'root';
     }
   }
@@ -107,7 +107,7 @@ class GoogleService {
 
       return drive.DriveApi(authenticateClient);
     } catch (e) {
-      print("Error getting Drive API client: $e");
+      LogModel.logError("Error getting Drive API client: $e");
       return null;
     }
   }

@@ -33,7 +33,6 @@ class _NotificationListState extends State<NotificationList>
     ever(
       _filterCtl.isSearching,
       (bool newIsSearching) async {
-        print(newIsSearching);
         if (newIsSearching) {
           await _notiCtl.filterNotifications(
             searchApps: _filterCtl.searchParams['searchApps'],

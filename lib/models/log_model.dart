@@ -7,12 +7,16 @@ class LogModel {
   final String timestamp;
   final String message;
 
-  LogModel(
-      {required this.type, required this.timestamp, required this.message});
+  LogModel({
+    required this.type,
+    required this.timestamp,
+    required this.message,
+  });
 
   // Convert LogModel to JSON (Map<String, dynamic>)
   Map<String, dynamic> toJson() {
     return {
+      'type': type,
       'timestamp': timestamp,
       'message': message,
     };
@@ -34,10 +38,28 @@ class LogModel {
       Hive.init(appDir.path);
     }
 
-    var logBox = await Hive.openBox(AppConstants.logs);
-    LogModel newLog = LogModel(
-        type: logType, timestamp: DateTime.now().toString(), message: message);
+    // Open the box and store logs as a Map
+    var logBox = await Hive.openBox<Map<String, dynamic>>(AppConstants.logs);
+
+    // Create the new log entry as a map
+    Map<String, dynamic> newLog = {
+      'type': logType,
+      'timestamp': DateTime.now().toString(),
+      'message': message,
+    };
+
+    // Add the log entry to the box
     await logBox.add(newLog);
+
+    // Optionally, close the box
     await logBox.close();
+  }
+
+  static Future<void> logError(String message) async {
+    await addLog(AppConstants.logError, message);
+  }
+
+  static Future<void> logInfo(String message) async {
+    await addLog(AppConstants.logInfo, message);
   }
 }

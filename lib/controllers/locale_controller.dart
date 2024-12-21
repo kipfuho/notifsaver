@@ -15,7 +15,6 @@ class LocaleController extends GetxController {
   Future<void> loadLocale() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedLocale = prefs.getString('locale');
-    print(savedLocale);
     if (savedLocale != null) {
       List<String> localeParts = savedLocale.split('_');
       _locale.value = Locale(localeParts[0], localeParts.length > 1 ? localeParts[1] : '');

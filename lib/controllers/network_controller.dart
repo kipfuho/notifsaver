@@ -22,7 +22,6 @@ class NetworkController extends GetxController {
   Future<void> _handleConnectivityChange(
       List<ConnectivityResult> result) async {
     hasNetworkAccess.value = await hasInternetAccess();
-    print(hasNetworkAccess.value);
   }
 
   Future<bool> hasInternetAccess() async {

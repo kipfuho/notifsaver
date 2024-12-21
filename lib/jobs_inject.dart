@@ -86,7 +86,7 @@ Future<void> backupToDrive() async {
       uploadMedia: fileMedia,
     );
   } catch (e) {
-    print("Error uploading file: $e");
+    LogModel.logError("Error uploading file: $e");
   }
 
   // Mark notifications as backed up
