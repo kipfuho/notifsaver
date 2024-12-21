@@ -80,14 +80,10 @@ Future<void> backupToDrive() async {
     await backupFile.length(),
   );
 
-  try {
-    await driveApi.files.create(
-      driveFile,
-      uploadMedia: fileMedia,
-    );
-  } catch (e) {
-    LogModel.logError("Error uploading file: $e");
-  }
+  await driveApi.files.create(
+    driveFile,
+    uploadMedia: fileMedia,
+  );
 
   // Mark notifications as backed up
   for (Map<dynamic, dynamic> item in data.values) {
@@ -95,6 +91,30 @@ Future<void> backupToDrive() async {
     notification['backup'] = true;
     await notificationBox.put(item['notificationId'], notification);
   }
+}
+
+Future<void> deleteLogs() async {
+  if (!Hive.isBoxOpen(AppConstants.logs)) {
+    var appDir = await getApplicationDocumentsDirectory();
+    Hive.init(appDir.path);
+  }
+  var logBox = await Hive.openBox(AppConstants.logs);
+
+  DateTime now = DateTime.now();
+  DateTime threshold = now.subtract(const Duration(days: 3));
+
+  // Iterate through the logs and delete those older than 3 days
+  for (var key in logBox.keys) {
+    var log = logBox.get(key);
+    if (log != null && log['timestamp'] != null) {
+      DateTime logDate = DateTime.parse(log['timestamp']);
+      if (logDate.isBefore(threshold)) {
+        await logBox.delete(key);
+      }
+    }
+  }
+
+  await logBox.close();
 }
 
 void callbackDispatcher() {
@@ -109,6 +129,9 @@ void callbackDispatcher() {
           break;
         case 'backupToDrive':
           await backupToDrive();
+          break;
+        case 'deleteLogs':
+          await deleteLogs();
           break;
         default:
       }
@@ -138,6 +161,12 @@ class AutoJobManagementInjection {
       '2',
       'backupToDrive',
       frequency: const Duration(hours: 24), // Frequency is minimum 15 minutes
+    );
+
+    Workmanager().registerPeriodicTask(
+      '3',
+      'deleteLogs',
+      frequency: const Duration(days: 3), // Frequency is minimum 15 minutes
     );
   }
 }
