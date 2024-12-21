@@ -221,7 +221,21 @@ class NotificationController extends GetxController {
   }
 
   Future<void> addNotificationForTest() async {
-    var notification = Map.from(notificationBox!.values.first);
+    Map notification;
+    if (notificationBox!.values.isEmpty) {
+      notification = {
+        'notificationId': 'test_notification_1',
+        'packageName': 'com.test.app',
+        'title': 'Test Notification',
+        'text': 'This is a test notification',
+        'postTime': DateTime.now().toIso8601String(),
+        'status': 'unread',
+        'createdAt': DateTime.now(),
+        'updatedAt': DateTime.now(),
+      };
+    } else {
+      notification = Map.from(notificationBox!.values.first);
+    }
     notification['notificationId'] =
         '${notification['notificationId']}_${DateTime.now().millisecondsSinceEpoch}';
     await notificationBox!.put(notification['notificationId'], notification);

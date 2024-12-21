@@ -30,6 +30,20 @@ Future<void> saveNotification() async {
   }
 }
 
+dynamic _convertToEncodable(dynamic value) {
+  if (value is Map) {
+    return value.map((key, value) => MapEntry(key, _convertToEncodable(value)));
+  } else if (value is List) {
+    return value.map((item) => _convertToEncodable(item)).toList();
+  } else if (value is DateTime) {
+    return value.toIso8601String();
+  } else if (value is Duration) {
+    return value.inMilliseconds;
+  } else {
+    return value;
+  }
+}
+
 Future<void> backupToDrive() async {
   if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
     var appDir = await getApplicationDocumentsDirectory();
@@ -37,9 +51,11 @@ Future<void> backupToDrive() async {
   }
   var notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
 
-  Map<String, dynamic> data = notificationBox.toMap().map(
-        (key, value) => MapEntry(key.toString(), value),
-      );
+  Map<String, dynamic> data = {
+    for (var item
+        in notificationBox.values.where((element) => element['backup'] != true))
+      item['notificationId'].toString(): _convertToEncodable(item)
+  };
   String jsonString = jsonEncode(data);
 
   // Save the JSON data to a file
@@ -68,6 +84,13 @@ Future<void> backupToDrive() async {
     driveFile,
     uploadMedia: fileMedia,
   );
+
+  // Mark notifications as backed up
+  for (Map<String, dynamic> item in data.values) {
+    var notification = await notificationBox.get(item['notificationId']);
+    notification['backup'] = true;
+    await notificationBox.put(item['notificationId'], notification);
+  }
 }
 
 void callbackDispatcher() {
@@ -110,7 +133,7 @@ class AutoJobManagementInjection {
     Workmanager().registerPeriodicTask(
       '2',
       'backupToDrive',
-      frequency: const Duration(hours: 1), // Frequency is minimum 15 minutes
+      frequency: const Duration(hours: 24), // Frequency is minimum 15 minutes
     );
   }
 }
