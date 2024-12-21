@@ -1,5 +1,6 @@
 import 'package:prj3/controllers/filter_controller.dart';
 import 'package:prj3/controllers/notification_controller.dart';
+import 'package:prj3/jobs_inject.dart';
 import 'package:prj3/pages/filter.dart';
 import 'package:prj3/widgets/notification_list.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -55,6 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void testFunction() {
+    backupToDrive();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,6 +108,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   notificationController.addNotificationForTest();
                 },
                 child: const Text('Add Data'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  testFunction();
+                },
+                child: const Text('Test Function'),
               ),
             ],
           ),

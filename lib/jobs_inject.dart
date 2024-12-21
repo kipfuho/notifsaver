@@ -80,13 +80,17 @@ Future<void> backupToDrive() async {
     await backupFile.length(),
   );
 
-  await driveApi.files.create(
-    driveFile,
-    uploadMedia: fileMedia,
-  );
+  try {
+    await driveApi.files.create(
+      driveFile,
+      uploadMedia: fileMedia,
+    );
+  } catch (e) {
+    print("Error uploading file: $e");
+  }
 
   // Mark notifications as backed up
-  for (Map<String, dynamic> item in data.values) {
+  for (Map<dynamic, dynamic> item in data.values) {
     var notification = await notificationBox.get(item['notificationId']);
     notification['backup'] = true;
     await notificationBox.put(item['notificationId'], notification);

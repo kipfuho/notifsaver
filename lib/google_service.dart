@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:prj3/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthenticatedClient extends http.BaseClient {
@@ -48,6 +49,10 @@ class GoogleService {
     final UserCredential userCredential =
         await _auth.signInWithCredential(credential);
 
+    // Save credentials securely
+    await SecureStorage.writeSecureStorage(
+        'userAccessToken', googleAuth.accessToken);
+    print(googleAuth.accessToken);
     return userCredential.user;
   }
 
@@ -90,14 +95,20 @@ class GoogleService {
 
   // Get Google Drive API client using Firebase access token
   Future<drive.DriveApi?> getDriveApi() async {
-    User? user = _auth.currentUser;
-    if (user == null) return null;
+    try {
+      User? user = _auth.currentUser;
+      if (user == null) return null;
 
-    // Get the user's ID token from Firebase
-    final idToken = await user.getIdToken();
-    final authenticateClient = AuthenticatedClient(idToken!, http.Client());
+      // Get OAuth2 access token from secure storage
+      final accessToken =
+          await SecureStorage.readSecureStorage('userAccessToken');
+      final authenticateClient =
+          AuthenticatedClient(accessToken!, http.Client());
 
-    return drive.DriveApi(
-        authenticateClient); // Return the Google Drive API client
+      return drive.DriveApi(authenticateClient);
+    } catch (e) {
+      print("Error getting Drive API client: $e");
+      return null;
+    }
   }
 }
