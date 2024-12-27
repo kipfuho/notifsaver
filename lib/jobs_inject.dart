@@ -105,11 +105,14 @@ Future<void> backupToDrive() async {
 }
 
 Future<void> deleteLogs() async {
+  // TODO: disable logs for production
   if (!Hive.isBoxOpen(AppConstants.logs)) {
     var appDir = await getApplicationDocumentsDirectory();
     Hive.init(appDir.path);
   }
-  var logBox = await Hive.openBox(AppConstants.logs);
+  var logBox = Hive.isBoxOpen(AppConstants.logs)
+      ? Hive.box(AppConstants.logs)
+      : await Hive.openBox(AppConstants.logs);
 
   DateTime now = DateTime.now();
   DateTime threshold = now.subtract(const Duration(days: 3));
@@ -124,11 +127,10 @@ Future<void> deleteLogs() async {
       }
     }
   }
-
-  await logBox.close();
 }
 
 Future<void> syncData() async {
+  print('start sync data');
   UserController userController;
   try {
     userController = Get.find();
@@ -173,10 +175,12 @@ Future<void> syncData() async {
 
   await backupToDrive();
   userController.finishSyncData();
+  print('stop sync data');
 }
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    print("Background Task executing: $task");
     try {
       await LogModel.addLog(
           AppConstants.logInfo, "Background Task executing: $task");

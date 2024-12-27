@@ -32,14 +32,14 @@ class LogModel {
   }
 
   static Future<void> addLog(String logType, String message) async {
-    // Get the directory for storing Hive data
+    // TODO: disable logs for production
     if (!Hive.isBoxOpen(AppConstants.logs)) {
       var appDir = await getApplicationDocumentsDirectory();
       Hive.init(appDir.path);
     }
-
-    // Open the box and store logs as a Map
-    var logBox = await Hive.openBox<Map<String, dynamic>>(AppConstants.logs);
+    var logBox = Hive.isBoxOpen(AppConstants.logs)
+        ? Hive.box(AppConstants.logs)
+        : await Hive.openBox(AppConstants.logs);
 
     // Create the new log entry as a map
     Map<String, dynamic> newLog = {
@@ -50,9 +50,6 @@ class LogModel {
 
     // Add the log entry to the box
     await logBox.add(newLog);
-
-    // Optionally, close the box
-    await logBox.close();
   }
 
   static Future<void> logError(String message) async {

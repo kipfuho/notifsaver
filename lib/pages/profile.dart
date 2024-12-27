@@ -59,7 +59,7 @@ class ProfilePage extends StatelessWidget {
                   );
                   return;
                 }
-
+                print('start register');
                 Workmanager().registerOneOffTask(
                   "4",
                   "syncData",
