@@ -47,6 +47,11 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  void _noLogin() {
+    _userController.setUser(null);
+    Get.to(() => const HomeScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,12 +73,18 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const SizedBox(height: 20),
               if (isLoading) const CircularProgressIndicator(),
-              if (!isLoading)
+              if (!isLoading) ...[
                 ElevatedButton(
                   onPressed: _signInWithGoogle,
                   child:
                       Text(Intl.message('login_google', name: 'login_google')),
                 ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: _noLogin,
+                  child: Text(Intl.message('no_login', name: 'no_login')),
+                ),
+              ]
             ],
           ),
         ),

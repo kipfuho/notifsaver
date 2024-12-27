@@ -1,8 +1,10 @@
 import 'package:prj3/controllers/installed_app_controller.dart';
+import 'package:prj3/controllers/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prj3/controllers/locale_controller.dart';
 import 'package:prj3/widgets/notification_icon.dart';
 import 'package:prj3/platform_channel.dart';
+import 'package:prj3/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
@@ -20,6 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Locale _currentLocale = const Locale('en', 'US');
   final LocaleController localeController = Get.find();
   final InstalledAppController settingController = Get.find();
+  final UserController _userCtl = Get.find();
 
   @override
   void initState() {
@@ -49,6 +52,22 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(Intl.message('settings_title', name: 'settings_title')),
+          actions: [
+            if (_userCtl.user.value != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 30.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => ProfilePage());
+                  },
+                  child: CircleAvatar(
+                    radius: 24,
+                    backgroundImage:
+                        NetworkImage(_userCtl.user.value!.photoURL ?? ''),
+                  ),
+                ),
+              ),
+          ],
         ),
         body: Column(
           children: [
