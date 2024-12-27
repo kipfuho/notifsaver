@@ -25,10 +25,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "big_text": MessageLookupByLibrary.simpleMessage("Big Text"),
         "category": MessageLookupByLibrary.simpleMessage("Category"),
         "channel_id": MessageLookupByLibrary.simpleMessage("Channel Id"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "login": MessageLookupByLibrary.simpleMessage("Log in"),
         "login_google":
             MessageLookupByLibrary.simpleMessage("Log in with Google"),
+        "no_login":
+            MessageLookupByLibrary.simpleMessage("Proceed without log in"),
         "no_notifications":
             MessageLookupByLibrary.simpleMessage("There\'s no notifications"),
         "notification_detail":
@@ -46,8 +49,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_selectLanguage":
             MessageLookupByLibrary.simpleMessage("Select Language"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Settings"),
+        "sign_out": MessageLookupByLibrary.simpleMessage("Sign out"),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "sub_text": MessageLookupByLibrary.simpleMessage("Sub Text"),
+        "sync_data": MessageLookupByLibrary.simpleMessage("Sync data"),
+        "sync_done": MessageLookupByLibrary.simpleMessage("Sync done!"),
+        "sync_in_progress":
+            MessageLookupByLibrary.simpleMessage("Sync in progress"),
         "tag": MessageLookupByLibrary.simpleMessage("Tag"),
         "text": MessageLookupByLibrary.simpleMessage("Text"),
         "ticker_text": MessageLookupByLibrary.simpleMessage("Ticker Text"),

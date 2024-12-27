@@ -5,6 +5,8 @@
   "settings_selectLanguage": "Select Language",
   "settings_inclusiveApps": "Apps to read notifications from",
   "login": "Log in",
+  "sign_out": "Sign out",
+  "no_login": "Proceed without log in",
   "login_google": "Log in with Google",
   "unread": "Unread",
   "read": "Read",
@@ -23,5 +25,9 @@
   "ticker_text": "Ticker Text",
   "priority": "Priority",
   "channel_id": "Channel Id",
-  "status": "Status"
+  "status": "Status",
+  "sync_data": "Sync data",
+  "sync_in_progress": "Sync in progress",
+  "sync_done": "Sync done!",
+  "error": "Error"
 }

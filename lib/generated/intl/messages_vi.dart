@@ -25,10 +25,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "big_text": MessageLookupByLibrary.simpleMessage("Nội dung dài"),
         "category": MessageLookupByLibrary.simpleMessage("Danh mục"),
         "channel_id": MessageLookupByLibrary.simpleMessage("Id kênh"),
+        "error": MessageLookupByLibrary.simpleMessage("Lỗi"),
         "home": MessageLookupByLibrary.simpleMessage("Trang chủ"),
         "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
         "login_google":
             MessageLookupByLibrary.simpleMessage("Đăng nhập với Google"),
+        "no_login":
+            MessageLookupByLibrary.simpleMessage("Tiếp tục mà không đăng nhập"),
         "no_notifications":
             MessageLookupByLibrary.simpleMessage("Không có thông báo nào"),
         "notification_detail":
@@ -47,8 +50,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_selectLanguage":
             MessageLookupByLibrary.simpleMessage("Chọn ngôn ngữ"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Cài đặt"),
+        "sign_out": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
         "status": MessageLookupByLibrary.simpleMessage("Trạng thái"),
         "sub_text": MessageLookupByLibrary.simpleMessage("Nội dung phụ"),
+        "sync_data": MessageLookupByLibrary.simpleMessage("Đồng bộ dữ liệu"),
+        "sync_done": MessageLookupByLibrary.simpleMessage("Đồng bộ hoàn tất"),
+        "sync_in_progress":
+            MessageLookupByLibrary.simpleMessage("Đang đồng bộ"),
         "tag": MessageLookupByLibrary.simpleMessage("Nhãn"),
         "text": MessageLookupByLibrary.simpleMessage("Nội dung"),
         "ticker_text": MessageLookupByLibrary.simpleMessage("Nội dung cuộn"),

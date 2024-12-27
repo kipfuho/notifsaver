@@ -5,6 +5,8 @@
   "settings_selectLanguage": "Chọn ngôn ngữ",
   "settings_inclusiveApps": "Các ứng dụng cho phép đọc thông báo",
   "login": "Đăng nhập",
+  "sign_out": "Đăng xuất",
+  "no_login": "Tiếp tục mà không đăng nhập",
   "login_google": "Đăng nhập với Google",
   "unread": "Chưa đọc",
   "read": "Đã đọc",
@@ -23,5 +25,9 @@
   "ticker_text": "Nội dung cuộn",
   "priority": "Độ ưu tiên",
   "channel_id": "Id kênh",
-  "status": "Trạng thái"
+  "status": "Trạng thái",
+  "sync_data": "Đồng bộ dữ liệu",
+  "sync_in_progress": "Đang đồng bộ",
+  "sync_done": "Đồng bộ hoàn tất",
+  "error": "Lỗi"
 }

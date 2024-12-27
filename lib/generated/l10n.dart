@@ -110,6 +110,26 @@ class S {
     );
   }
 
+  /// `Sign out`
+  String get sign_out {
+    return Intl.message(
+      'Sign out',
+      name: 'sign_out',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Proceed without log in`
+  String get no_login {
+    return Intl.message(
+      'Proceed without log in',
+      name: 'no_login',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Log in with Google`
   String get login_google {
     return Intl.message(
@@ -285,6 +305,46 @@ class S {
     return Intl.message(
       'Status',
       name: 'status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sync data`
+  String get sync_data {
+    return Intl.message(
+      'Sync data',
+      name: 'sync_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sync in progress`
+  String get sync_in_progress {
+    return Intl.message(
+      'Sync in progress',
+      name: 'sync_in_progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sync done!`
+  String get sync_done {
+    return Intl.message(
+      'Sync done!',
+      name: 'sync_done',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error`
+  String get error {
+    return Intl.message(
+      'Error',
+      name: 'error',
       desc: '',
       args: [],
     );
