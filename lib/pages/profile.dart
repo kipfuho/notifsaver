@@ -54,12 +54,10 @@ class ProfilePage extends StatelessWidget {
                 if (_userController.syncStatus.value == 1) {
                   _snackbarController.showSnackbar(
                     Intl.message('error', name: 'error'),
-                    Intl.message('sync_in_progress_message',
-                        name: 'sync_in_progress_message'),
+                    Intl.message('sync_in_progress', name: 'sync_in_progress'),
                   );
                   return;
                 }
-                print('start register');
                 Workmanager().registerOneOffTask(
                   "4",
                   "syncData",
