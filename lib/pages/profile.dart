@@ -1,17 +1,16 @@
-import 'package:prj3/controllers/snack_bar_controller.dart';
 import 'package:prj3/controllers/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:prj3/utils/hot_message.dart';
 import 'package:prj3/pages/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import 'package:workmanager/workmanager.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
   final UserController _userController = Get.find();
-  final MySnackbarController _snackbarController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +51,7 @@ class ProfilePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 if (_userController.syncStatus.value == 1) {
-                  _snackbarController.showSnackbar(
+                  HotMessage.showToast(
                     Intl.message('error', name: 'error'),
                     Intl.message('sync_in_progress', name: 'sync_in_progress'),
                   );
