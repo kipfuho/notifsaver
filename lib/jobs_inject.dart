@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:prj3/constant.dart';
+import 'package:prj3/controllers/user_controller.dart';
 import 'package:prj3/google_service.dart';
 import 'package:prj3/models/log_model.dart';
 import 'package:workmanager/workmanager.dart';
@@ -51,9 +53,18 @@ Future<void> backupToDrive() async {
   }
   var notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
 
+  // Get the previous month's box, to make sure no noti is missed
+  DateTime now = DateTime.now();
+  DateTime previousMonth = DateTime(now.year, now.month - 1);
+  var previousNotificationBox =
+      await Hive.openBox(AppConstants.getHiveBoxName(date: previousMonth));
+
   Map<String, dynamic> data = {
     for (var item
         in notificationBox.values.where((element) => element['backup'] != true))
+      item['notificationId'].toString(): _convertToEncodable(item),
+    for (var item in previousNotificationBox.values
+        .where((element) => element['backup'] != true))
       item['notificationId'].toString(): _convertToEncodable(item)
   };
   String jsonString = jsonEncode(data);
@@ -117,6 +128,53 @@ Future<void> deleteLogs() async {
   await logBox.close();
 }
 
+Future<void> syncData() async {
+  UserController userController;
+  try {
+    userController = Get.find();
+  } catch (e) {
+    userController = Get.put(UserController());
+  }
+  userController.startSyncData();
+
+  if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
+    var appDir = await getApplicationDocumentsDirectory();
+    Hive.init(appDir.path);
+  }
+
+  GoogleService googleService = GoogleService();
+  drive.DriveApi? driveApi = await googleService.getDriveApi();
+
+  if (driveApi == null) {
+    throw Exception("Failed to authenticate with Google Drive API.");
+  }
+
+  var fatherFolder = await googleService.getFolderId(driveApi, 'notifsaver');
+
+  // List all files in the folder
+  List<drive.File> files =
+      await googleService.listFilesInFolder(driveApi, fatherFolder);
+  for (var file in files) {
+    var media = await driveApi.files.get(file.id!,
+        downloadOptions: drive.DownloadOptions.fullMedia) as drive.Media;
+    var fileContent = await media.stream.transform(utf8.decoder).join();
+
+    // Parse the JSON content
+    Map<String, dynamic> jsonData = jsonDecode(fileContent);
+
+    // Search through the notifications
+    for (var notification in jsonData.values) {
+      DateTime createdAt = DateTime.parse(notification['createdAt']);
+      var notiBox =
+          await Hive.openBox(AppConstants.getHiveBoxName(date: createdAt));
+      await notiBox.put(notification['notificationId'], notification);
+    }
+  }
+
+  await backupToDrive();
+  userController.finishSyncData();
+}
+
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
@@ -132,6 +190,9 @@ void callbackDispatcher() {
           break;
         case 'deleteLogs':
           await deleteLogs();
+          break;
+        case 'syncData':
+          await syncData();
           break;
         default:
       }

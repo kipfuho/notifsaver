@@ -29,7 +29,8 @@ class GoogleService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
-      drive.DriveApi.driveFileScope, // Grants file access to Google Drive
+      drive.DriveApi.driveFileScope,
+      drive.DriveApi.driveReadonlyScope,
     ],
   );
 
@@ -109,6 +110,22 @@ class GoogleService {
     } catch (e) {
       LogModel.logError("Error getting Drive API client: $e");
       return null;
+    }
+  }
+
+  Future<List<drive.File>> listFilesInFolder(
+      drive.DriveApi driveApi, String folderId) async {
+    try {
+      final fileList = await driveApi.files.list(
+        q: "'$folderId' in parents and trashed = false",
+        spaces: 'drive',
+        $fields: 'files(id, name, mimeType)',
+      );
+
+      return fileList.files ?? [];
+    } catch (e) {
+      print("Failed to list files in folder: $e");
+      return [];
     }
   }
 }

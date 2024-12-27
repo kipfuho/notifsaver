@@ -1,13 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
+import 'package:prj3/controllers/snack_bar_controller.dart';
 import 'package:prj3/controllers/user_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:prj3/pages/sign_in.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'package:workmanager/workmanager.dart';
 
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({super.key});
+class ProfilePage extends StatelessWidget {
+  ProfilePage({super.key});
 
-  final UserController _userController = Get.find(); // Get the UserController
+  final UserController _userController = Get.find();
+  final MySnackbarController _snackbarController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Get.to(() => const SignInScreen());
       });
-      return const SizedBox.shrink(); // Return an empty widget while redirecting
+      return const SizedBox.shrink();
     }
 
     final user = _userController.user.value!; // Get the logged-in user
@@ -47,11 +51,40 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                _userController.setUser(null); // Clear the user in UserController
-                Get.to(() => const SignInScreen()); // Navigate back to sign-in page
+                if (_userController.syncStatus.value == 1) {
+                  _snackbarController.showSnackbar(
+                    Intl.message('error', name: 'error'),
+                    Intl.message('sync_in_progress_message',
+                        name: 'sync_in_progress_message'),
+                  );
+                  return;
+                }
+
+                Workmanager().registerOneOffTask(
+                  "4",
+                  "syncData",
+                );
               },
-              child: const Text('Sign Out'),
+              child: Obx(
+                () {
+                  if (_userController.syncStatus.value == 1) {
+                    return CircularProgressIndicator();
+                  } else if (_userController.syncStatus.value == 2) {
+                    return Text(Intl.message('sync_done', name: 'sync_done'));
+                  } else {
+                    return Text(Intl.message('sync_data', name: 'sync_data'));
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                _userController.setUser(null);
+                Get.to(() => const SignInScreen());
+              },
+              child: Text(Intl.message('sign_out', name: 'sign_out')),
             ),
           ],
         ),

@@ -4,8 +4,8 @@ class AppConstants {
   static const String logInfo = 'info';
   static const String logError = 'error';
 
-  static String getHiveBoxName() {
-    DateTime now = DateTime.now();
+  static String getHiveBoxName({DateTime? date}) {
+    DateTime now = date ?? DateTime.now();
     // Format the box name as "notifications_YYYY_MM"
     return 'notifications_${now.year}_${now.month.toString().padLeft(2, '0')}';
   }

@@ -3,6 +3,7 @@ import 'package:prj3/controllers/network_controller.dart';
 import 'package:prj3/controllers/notification_controller.dart';
 import 'package:prj3/controllers/locale_controller.dart';
 import 'package:prj3/controllers/filter_controller.dart';
+import 'package:prj3/controllers/snack_bar_controller.dart';
 import 'package:prj3/controllers/user_controller.dart';
 import 'package:get/get.dart';
 
@@ -26,5 +27,8 @@ class StateManagementInjection {
 
     // Initialize FilterController
     Get.put(NetworkController());
+
+    // Initialize MySnackbarController
+    Get.put(MySnackbarController());
   }
 }
