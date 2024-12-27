@@ -74,7 +74,7 @@ class GoogleService {
       }
       return createFolder(driveApi, folderName);
     } catch (e) {
-      LogModel.logError("Error searching for folder: $e");
+      LogModel.logError("Error getFolderId: $e");
       return 'root';
     }
   }
@@ -89,7 +89,7 @@ class GoogleService {
       var createdFolder = await driveApi.files.create(folder);
       return createdFolder.id ?? 'root';
     } catch (e) {
-      LogModel.logError("Error creating folder: $e");
+      LogModel.logError("Error createFolder: $e");
       return 'root';
     }
   }
@@ -108,7 +108,7 @@ class GoogleService {
 
       return drive.DriveApi(authenticateClient);
     } catch (e) {
-      LogModel.logError("Error getting Drive API client: $e");
+      LogModel.logError("Error getDriveApi: $e");
       return null;
     }
   }
@@ -124,7 +124,7 @@ class GoogleService {
 
       return fileList.files ?? [];
     } catch (e) {
-      print("Failed to list files in folder: $e");
+      LogModel.logError("Error listFilesInFolder: $e");
       return [];
     }
   }

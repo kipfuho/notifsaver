@@ -31,12 +31,8 @@ class _SignInScreenState extends State<SignInScreen> {
     try {
       final user = await _googleService.signInWithGoogle();
       if (user != null) {
-        // Sign-in successful
         _userController.setUser(user);
-        print("Navigating to HomeScreen"); // Debugging statement
         Get.to(() => const HomeScreen());
-      } else {
-        print("User is null after sign-in"); // Debugging statement
       }
     } catch (err) {
       HotMessage.showToast('Error', err.toString());
