@@ -39,7 +39,9 @@ class NotificationDetail extends StatelessWidget {
                         NotificationIcon(
                             packageName: notification['packageName']),
                         const SizedBox(width: 16),
-                        Text(notification['appName'],
+                        Text(
+                            notification['appName'] ??
+                                notification['packageName'],
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
