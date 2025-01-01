@@ -317,6 +317,5 @@ class NotificationController extends GetxController {
         await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
     await box.put(notification['notificationId'], notification);
     await filterNotifications();
-    print(unreadNotifications.value.length);
   }
 }
