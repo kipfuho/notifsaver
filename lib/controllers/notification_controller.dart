@@ -41,7 +41,8 @@ class NotificationController extends GetxController {
       PlatformChannels.openNotificationSettings();
     } on PlatformException catch (err) {
       HotMessage.showError(err.toString());
-      LogModel.logError("Failed to open notification settings: '${err.message}'");
+      LogModel.logError(
+          "Failed to open notification settings: '${err.message}'");
     }
   }
 
@@ -119,6 +120,9 @@ class NotificationController extends GetxController {
       {String? searchText, List<String>? searchApps}) async {
     if (notificationBox == null) return;
     isLoading.value = true;
+    if (!notificationBox!.isOpen) {
+      notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
+    }
 
     unreadNotifications.value = notificationBox!.values
         .where((notification) =>
@@ -297,18 +301,22 @@ class NotificationController extends GetxController {
     return jsonDecode(jsonEncode(object)) as T;
   }
 
-  Future<void> addNotificationForTest() async {
+  Future<void> addNotificationForTest({DateTime? date}) async {
+    DateTime currentDate = date ?? DateTime.now();
     Map notification = {
       'notificationId': 'test_notification_${DateTime.now().toIso8601String()}',
       'packageName': 'com.test.app',
       'title': 'Test Notification',
       'text': 'This is a test notification',
-      'postTime': DateTime.now().toIso8601String(),
+      'postTime': currentDate.toIso8601String(),
       'status': 'unread',
-      'createdAt': DateTime.now().toIso8601String(),
-      'updatedAt': DateTime.now().toIso8601String(),
+      'createdAt': currentDate.toIso8601String(),
+      'updatedAt': currentDate.toIso8601String(),
     };
-    await notificationBox!.put(notification['notificationId'], notification);
-    unreadNotifications.add(notification);
+    var box =
+        await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
+    await box.put(notification['notificationId'], notification);
+    await filterNotifications();
+    print(unreadNotifications.value.length);
   }
 }

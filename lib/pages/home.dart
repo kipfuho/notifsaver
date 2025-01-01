@@ -68,7 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       await box.deleteFromDisk();
     }
-    // await box.close();
+
+    notificationController.filterNotifications();
   }
 
   // Handle BottomNavigationBar item taps
@@ -130,7 +131,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   notificationController.addNotificationForTest();
                 },
-                child: const Text('Add Data'),
+                child: const Text('Add Data 1'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  var currentDate = DateTime.now();
+                  currentDate = DateTime(
+                    currentDate.month == 1
+                        ? currentDate.year - 1
+                        : currentDate.year,
+                    currentDate.month == 1 ? 12 : currentDate.month - 1,
+                    currentDate.day,
+                  );
+                  notificationController.addNotificationForTest();
+                },
+                child: const Text('Add Data 2'),
               ),
               ElevatedButton(
                 onPressed: () {

@@ -78,7 +78,7 @@ class PagingListController extends GetxController {
       }
 
       if (startIndex >= itemList.length) {
-        _pagingCtl.appendLastPage([]);
+        _pagingCtl.appendLastPage(<Map<dynamic, dynamic>>[]);
         return;
       }
 
@@ -101,7 +101,9 @@ class PagingListController extends GetxController {
         _pagingCtl.appendPage(newItems, pageKey + 1);
       }
     } catch (err) {
-      HotMessage.showError(err.toString());
+      var msg = '_fetchPage ${err.toString()}';
+      print(msg);
+      HotMessage.showError(msg);
       _pagingCtl.error = err;
     }
   }

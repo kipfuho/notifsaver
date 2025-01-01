@@ -17,7 +17,7 @@ class HotMessage {
   }
 
   static void showError(String message) {
-    showSnackbar(Intl.message('error', name: 'error'), message);
+    showToast(Intl.message('error', name: 'error'), message);
   }
 
   static void showToast(String title, String message) {

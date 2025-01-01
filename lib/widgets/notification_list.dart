@@ -59,69 +59,85 @@ class _NotificationListState extends State<NotificationList>
     return PagedListView<int, dynamic>(
       pagingController: _pListCtl._pagingCtl,
       builderDelegate: PagedChildBuilderDelegate<dynamic>(
-        itemBuilder: (context, notification, index) {
-          return GestureDetector(
-            onTap: () {
-              if (notification['status'] == 'unread') {
-                _notiCtl.markAsRead(
-                    notification['notificationId'], notification['updatedAt'],
-                    index: index);
-              }
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NotificationDetail(
-                      notification: notification, index: index),
+          itemBuilder: (context, notification, index) {
+            return GestureDetector(
+              onTap: () {
+                if (notification['status'] == 'unread') {
+                  _notiCtl.markAsRead(
+                      notification['notificationId'], notification['updatedAt'],
+                      index: index);
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationDetail(
+                        notification: notification, index: index),
+                  ),
+                );
+              },
+              onDoubleTap: () {
+                _pListCtl.refreshList();
+              },
+              child: ListTile(
+                leading: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${index + 1}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(width: 8),
+                    NotificationIcon(packageName: notification['packageName']),
+                  ],
                 ),
-              );
-            },
-            child: ListTile(
-              leading: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '${index + 1}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(width: 8),
-                  NotificationIcon(packageName: notification['packageName']),
-                ],
+                title: Text(
+                  notification['title'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      notification['text'] ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      notification['updatedAt'] != null
+                          ? HelperFunction.formatYYYYMMDD(
+                              notification['updatedAt'])
+                          : 'N/A',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              title: Text(
-                notification['title'] ?? '',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    notification['text'] ?? '',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    notification['updatedAt'] != null
-                        ? HelperFunction.formatYYYYMMDD(
-                            notification['updatedAt'])
-                        : 'N/A',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
+            );
+          },
+          noItemsFoundIndicatorBuilder: (context) => Scaffold(
+                body: GestureDetector(
+                  onDoubleTap: () {
+                    _pListCtl.refreshList();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.transparent,
+                    child: Center(
+                      child: Text(
+                        Intl.message('no_notifications',
+                            name: 'no_notifications'),
+                        style: const TextStyle(fontSize: 24),
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
-          );
-        },
-        noItemsFoundIndicatorBuilder: (context) => Center(
-          child: Text(
-              Intl.message('no_notifications', name: 'no_notifications'),
-              style: const TextStyle(fontSize: 24)),
-        ),
-      ),
+                ),
+              )),
     );
   }
 
