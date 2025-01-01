@@ -12,11 +12,12 @@
   "read": "Read",
   "saved": "Saved",
   "save": "Save",
-  "unread": "Unsave",
+  "unsave": "Unsave",
   "no_notifications": "There's no notifications",
   "notification_detail": "Notification detail",
   "tag": "Tag",
   "post_time": "Post Time",
+  "last_modified_time": "Last Modified Time",
   "title": "Title",
   "text": "Text",
   "sub_text": "Sub Text",
@@ -29,5 +30,6 @@
   "sync_data": "Sync data",
   "sync_in_progress": "Sync in progress",
   "sync_done": "Sync done!",
-  "error": "Error"
+  "error": "Error",
+  "no_internet": "Cannot connect to Internet"
 }

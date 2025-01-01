@@ -12,11 +12,12 @@
   "read": "Đã đọc",
   "saved": "Đã lưu",
   "save": "Lưu",
-  "unread": "Bỏ lưu",
+  "unsave": "Bỏ lưu",
   "no_notifications": "Không có thông báo nào",
   "notification_detail": "Chi tiết thông báo",
   "tag": "Nhãn",
   "post_time": "Thời gian đăng thông báo",
+  "last_modified_time": "Lần cuối chỉnh sửa",
   "title": "Tiêu đề",
   "text": "Nội dung",
   "sub_text": "Nội dung phụ",
@@ -29,5 +30,6 @@
   "sync_data": "Đồng bộ dữ liệu",
   "sync_in_progress": "Đang đồng bộ",
   "sync_done": "Đồng bộ hoàn tất",
-  "error": "Lỗi"
+  "error": "Lỗi",
+  "no_internet": "Không có kết nối Internet"
 }
