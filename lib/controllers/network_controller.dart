@@ -1,6 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:prj3/utils/hot_message.dart';
 
 class NetworkController extends GetxController {
   var hasNetworkAccess = false.obs;
@@ -31,7 +33,8 @@ class NetworkController extends GetxController {
                 const Duration(seconds: 5),
               );
       return response.statusCode == 200;
-    } catch (e) {
+    } catch (err) {
+      HotMessage.showError(Intl.message('no_internet', name: 'no_internet'));
       return false;
     }
   }

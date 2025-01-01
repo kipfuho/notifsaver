@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:prj3/utils/hot_message.dart';
 
 class ListController extends GetxController {
   var list = <Map<String, String>>[];
@@ -67,6 +68,7 @@ class _TestAppState extends State<TestApp> {
         _pagingController?.appendPage(newItems, pageKey + 1);
       }
     } catch (e) {
+      HotMessage.showError(e.toString());
       _pagingController?.error = e;
     }
   }

@@ -1,5 +1,6 @@
 import 'package:prj3/controllers/filter_controller.dart';
 import 'package:prj3/controllers/notification_controller.dart';
+import 'package:prj3/controllers/user_controller.dart';
 import 'package:prj3/jobs_inject.dart';
 import 'package:prj3/pages/filter.dart';
 import 'package:prj3/widgets/notification_list.dart';
@@ -20,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final NotificationController notificationController = Get.find();
   final FilterController filterController = Get.find();
+  final UserController _userCtl = Get.find();
   int _selectedIndex = 0; // Track the selected tab
 
   // Define the different pages for the BottomNavigationBar
@@ -31,12 +33,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Method to print all Hive data
   Future<void> printHiveData() async {
-    var box = await Hive.openBox(AppConstants.getHiveBoxName());
-    var keys = box.keys;
+    var currentDate = DateTime.now();
+    for (int i = 0; i < 5; i += 1) {
+      print(AppConstants.getHiveBoxName(date: currentDate));
+      var box =
+          await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
+      currentDate = DateTime(
+        currentDate.month == 1 ? currentDate.year - 1 : currentDate.year,
+        currentDate.month == 1 ? 12 : currentDate.month - 1,
+        currentDate.day,
+      );
+      var keys = box.keys;
 
-    for (var key in keys) {
-      var value = box.get(key);
-      print('Key: $key, Value: $value');
+      for (var key in keys) {
+        var value = box.get(key);
+        print('Key: $key, Value: $value');
+      }
     }
 
     // await box.close();
@@ -44,8 +56,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Method to delete the Hive box
   Future<void> deleteHiveBox() async {
-    var box = await Hive.openBox(AppConstants.getHiveBoxName());
-    await box.deleteFromDisk();
+    var currentDate = DateTime.now();
+    for (int i = 0; i < 5; i += 1) {
+      print(AppConstants.getHiveBoxName(date: currentDate));
+      var box =
+          await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
+      currentDate = DateTime(
+        currentDate.month == 1 ? currentDate.year - 1 : currentDate.year,
+        currentDate.month == 1 ? 12 : currentDate.month - 1,
+        currentDate.day,
+      );
+      await box.deleteFromDisk();
+    }
     // await box.close();
   }
 
@@ -64,7 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Hide back button
+        automaticallyImplyLeading:
+            _userCtl.user.value == null, // Hide back button
         title: Text(Intl.message('home', name: 'home')),
         actions: [
           IconButton(

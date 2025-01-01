@@ -1,4 +1,4 @@
-// import 'package:prj3/utils/hot_message.dart';
+import 'package:prj3/utils/hot_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prj3/platform_channel.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class AppIconManager {
       await prefs.setString(_appNameKeyPrefix + packageName, appName);
       return appName;
     } catch (err) {
-      // HotMessage.showToast('Error', err.toString());
+      // HotMessage.showError(err.toString());
       return packageName;
     }
   }

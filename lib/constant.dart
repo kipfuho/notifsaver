@@ -7,6 +7,8 @@ class AppConstants {
   static String getHiveBoxName({DateTime? date}) {
     DateTime now = date ?? DateTime.now();
     // Format the box name as "notifications_YYYY_MM"
-    return 'notifications_${now.year}_${now.month.toString().padLeft(2, '0')}';
+    var boxName =
+        'notifications_${now.year}_${now.month.toString().padLeft(2, '0')}';
+    return boxName;
   }
 }

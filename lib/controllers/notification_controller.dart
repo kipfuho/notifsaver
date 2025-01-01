@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:prj3/utils/hot_message.dart';
+
 class NotificationController extends GetxController {
   var notificationData = 'No notifications received'.obs;
   var unreadNotifications = <dynamic>[].obs;
@@ -37,8 +39,9 @@ class NotificationController extends GetxController {
   void openNotificationSettings() {
     try {
       PlatformChannels.openNotificationSettings();
-    } on PlatformException catch (e) {
-      LogModel.logError("Failed to open notification settings: '${e.message}'");
+    } on PlatformException catch (err) {
+      HotMessage.showError(err.toString());
+      LogModel.logError("Failed to open notification settings: '${err.message}'");
     }
   }
 
@@ -59,8 +62,9 @@ class NotificationController extends GetxController {
 
         // Add notification to queue instead of saving directly
         _addToQueue(notificationJson);
-      } catch (e) {
-        notificationData.value = "Failed to parse notification: $e";
+      } catch (err) {
+        HotMessage.showError(err.toString());
+        notificationData.value = "Failed to parse notification: $err";
       }
     }, onError: (error) {
       notificationData.value =
@@ -85,8 +89,8 @@ class NotificationController extends GetxController {
   Future<void> _saveNotificationToHive(
       Map<String, dynamic> notification) async {
     // add createdAt and updatedAt
-    notification['createdAt'] = DateTime.now();
-    notification['updatedAt'] = DateTime.now();
+    notification['createdAt'] = DateTime.now().toIso8601String();
+    notification['updatedAt'] = DateTime.now().toIso8601String();
     await notificationBox!.put(notification['notificationId'], notification);
     await PlatformChannels.removeNotificationFromTempStorage(
         notification['notificationId']);
@@ -146,15 +150,19 @@ class NotificationController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> markAsRead(dynamic notificationId, {int? index}) async {
-    var notification = notificationBox!.get(notificationId);
+  Future<void> markAsRead(String notificationId, String notificationPostTime,
+      {int? index}) async {
+    var box = await Hive.openBox(AppConstants.getHiveBoxName(
+        date: DateTime.parse(notificationPostTime)));
+    var notification = box.get(notificationId);
     if (notification != null) {
       notification['status'] = 'read';
-      notification['updatedAt'] = DateTime.now();
+      notification['updatedAt'] = DateTime.now().toIso8601String();
+      await box.delete(notificationId);
       await notificationBox!.put(notificationId, notification);
 
       readNotifications.add(notification);
-      if (index != null) {
+      if (index != null && index < unreadNotifications.length) {
         unreadNotifications.removeAt(index);
       } else {
         unreadNotifications.removeWhere(
@@ -163,15 +171,20 @@ class NotificationController extends GetxController {
     }
   }
 
-  Future<void> saveNotification(dynamic notificationId, {int? index}) async {
-    var notification = notificationBox!.get(notificationId);
+  Future<void> saveNotification(
+      String notificationId, String notificationPostTime,
+      {int? index}) async {
+    var box = await Hive.openBox(AppConstants.getHiveBoxName(
+        date: DateTime.parse(notificationPostTime)));
+    var notification = box.get(notificationId);
     if (notification != null) {
       notification['status'] = 'saved';
-      notification['updatedAt'] = DateTime.now();
+      notification['updatedAt'] = DateTime.now().toIso8601String();
+      await box.delete(notificationId);
       await notificationBox!.put(notificationId, notification);
 
       savedNotifications.add(notification);
-      if (index != null) {
+      if (index != null && index < readNotifications.length) {
         readNotifications.removeAt(index);
       } else {
         readNotifications.removeWhere(
@@ -180,15 +193,20 @@ class NotificationController extends GetxController {
     }
   }
 
-  Future<void> unSaveNotification(dynamic notificationId, {int? index}) async {
-    var notification = notificationBox!.get(notificationId);
+  Future<void> unSaveNotification(
+      String notificationId, String notificationPostTime,
+      {int? index}) async {
+    var box = await Hive.openBox(AppConstants.getHiveBoxName(
+        date: DateTime.parse(notificationPostTime)));
+    var notification = box.get(notificationId);
     if (notification != null) {
       notification['status'] = 'read';
-      notification['updatedAt'] = DateTime.now();
+      notification['updatedAt'] = DateTime.now().toIso8601String();
+      await box.delete(notificationId);
       await notificationBox!.put(notificationId, notification);
 
       readNotifications.add(notification);
-      if (index != null) {
+      if (index != null && index < savedNotifications.length) {
         savedNotifications.removeAt(index);
       } else {
         savedNotifications.removeWhere(
@@ -197,11 +215,14 @@ class NotificationController extends GetxController {
     }
   }
 
-  Future<void> deleteNotification(dynamic notificationId) async {
-    var notification = notificationBox!.get(notificationId);
+  Future<void> deleteNotification(
+      String notificationId, String notificationPostTime) async {
+    var box = await Hive.openBox(AppConstants.getHiveBoxName(
+        date: DateTime.parse(notificationPostTime)));
+    var notification = box.get(notificationId);
     if (notification != null) {
       notification['status'] = 'deleted';
-      notification['updatedAt'] = DateTime.now();
+      notification['updatedAt'] = DateTime.now().toIso8601String();
       await notificationBox!.put(notificationId, notification);
 
       savedNotifications.removeWhere(
@@ -238,8 +259,8 @@ class NotificationController extends GetxController {
                 _compareToSearchQuery(notification,
                     searchText: searchText, searchApps: searchApps))
             .toList()
-          ..sort((a, b) => DateTime.parse(b['createdAt'])
-              .compareTo(DateTime.parse(a['createdAt']))),
+          ..sort((a, b) => DateTime.parse(b['updatedAt'])
+              .compareTo(DateTime.parse(a['updatedAt']))),
         'shouldContinue': pastBox.values.isNotEmpty
       };
     }
@@ -277,25 +298,17 @@ class NotificationController extends GetxController {
   }
 
   Future<void> addNotificationForTest() async {
-    Map notification;
-    if (notificationBox!.values.isEmpty) {
-      notification = {
-        'notificationId': 'test_notification_1',
-        'packageName': 'com.test.app',
-        'title': 'Test Notification',
-        'text': 'This is a test notification',
-        'postTime': DateTime.now().toIso8601String(),
-        'status': 'unread',
-        'createdAt': DateTime.now(),
-        'updatedAt': DateTime.now(),
-      };
-    } else {
-      notification = Map.from(notificationBox!.values.first);
-    }
-    notification['notificationId'] =
-        '${notification['notificationId']}_${DateTime.now().millisecondsSinceEpoch}';
+    Map notification = {
+      'notificationId': 'test_notification_${DateTime.now().toIso8601String()}',
+      'packageName': 'com.test.app',
+      'title': 'Test Notification',
+      'text': 'This is a test notification',
+      'postTime': DateTime.now().toIso8601String(),
+      'status': 'unread',
+      'createdAt': DateTime.now().toIso8601String(),
+      'updatedAt': DateTime.now().toIso8601String(),
+    };
     await notificationBox!.put(notification['notificationId'], notification);
-
     unreadNotifications.add(notification);
   }
 }

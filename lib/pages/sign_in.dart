@@ -35,7 +35,7 @@ class _SignInScreenState extends State<SignInScreen> {
         Get.to(() => const HomeScreen());
       }
     } catch (err) {
-      HotMessage.showToast('Error', err.toString());
+      HotMessage.showError(err.toString());
     } finally {
       setState(() {
         isLoading = false;

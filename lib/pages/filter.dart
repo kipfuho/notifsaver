@@ -1,6 +1,7 @@
 import 'package:prj3/controllers/filter_controller.dart';
 import 'package:prj3/controllers/installed_app_controller.dart';
 import 'package:prj3/models/log_model.dart';
+import 'package:prj3/utils/hot_message.dart';
 import 'package:prj3/widgets/notification_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,8 +33,9 @@ class _FilterScreenState extends State<FilterScreen> {
       setState(() {
         searchText = _filterController.getSearchText();
       });
-    } catch (e) {
-      LogModel.logError("Error loading apps: $e");
+    } catch (err) {
+      HotMessage.showError(err.toString());
+      LogModel.logError("Error loading apps: $err");
     }
   }
 

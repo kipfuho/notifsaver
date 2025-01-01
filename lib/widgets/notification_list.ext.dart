@@ -33,8 +33,8 @@ class PagingListController extends GetxController {
 
       if (newList.length < currentListSize.value) {
         // Update PagingController's state manually
-        _pagingCtl.value = PagingState<int, Map<String, dynamic>>(
-          itemList: List<Map<String, dynamic>>.from(newList),
+        _pagingCtl.value = PagingState<int, Map<dynamic, dynamic>>(
+          itemList: List<Map<dynamic, dynamic>>.from(newList),
           nextPageKey: _pagingCtl.nextPageKey,
           error: null,
         );
@@ -48,8 +48,10 @@ class PagingListController extends GetxController {
 
   Future<bool> _fetchAnotherBox() async {
     currentDate.value = DateTime(
-      currentDate.value.year,
-      currentDate.value.month - 1, // Move to the previous month
+      currentDate.value.month == 1
+          ? currentDate.value.year - 1
+          : currentDate.value.year,
+      currentDate.value.month == 1 ? 12 : currentDate.value.month - 1,
       currentDate.value.day,
     );
     var result = await _notiCtl.getPastNotificationList(
@@ -67,7 +69,6 @@ class PagingListController extends GetxController {
     try {
       final startIndex = _pagingCtl.itemList?.length ?? 0;
       final endIndex = startIndex + pageSize.value;
-
       if (startIndex >= itemList.length) {
         while (startIndex >= itemList.length) {
           // Try fetch from past box
@@ -81,19 +82,27 @@ class PagingListController extends GetxController {
         return;
       }
 
-      final newItems = itemList.sublist(
+      final newItems = itemList
+          .sublist(
         startIndex,
         endIndex > itemList.length ? itemList.length : endIndex,
-      );
-
+      )
+          .map((item) {
+        if (item is Map<dynamic, dynamic>) {
+          return item;
+        } else {
+          throw Exception("Unexpected item type: ${item.runtimeType}");
+        }
+      }).toList();
       final isLastPage = newItems.length < pageSize.value;
       if (isLastPage) {
         _pagingCtl.appendLastPage(newItems);
       } else {
         _pagingCtl.appendPage(newItems, pageKey + 1);
       }
-    } catch (e) {
-      _pagingCtl.error = e;
+    } catch (err) {
+      HotMessage.showError(err.toString());
+      _pagingCtl.error = err;
     }
   }
 

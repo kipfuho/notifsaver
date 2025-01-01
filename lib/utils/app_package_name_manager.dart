@@ -1,4 +1,4 @@
-// import 'package:prj3/utils/hot_message.dart';
+import 'package:prj3/utils/hot_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prj3/platform_channel.dart';
 
@@ -14,7 +14,7 @@ class AppPackageNameManager {
 
       return appNames;
     } catch (err) {
-      // HotMessage.showToast('Error', err.toString());
+      // HotMessage.showError(err.toString());
       return [];
     }
   }
@@ -40,7 +40,7 @@ class AppPackageNameManager {
       List<String> appNames = await PlatformChannels.getAllInclusiveApp();
       return appNames;
     } catch (err) {
-      // HotMessage.showToast('Error', err.toString());
+      // HotMessage.showError(err.toString());
       return [];
     }
   }

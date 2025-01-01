@@ -1,8 +1,10 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:prj3/controllers/filter_controller.dart';
 import 'package:prj3/controllers/notification_controller.dart';
+import 'package:prj3/utils/hot_message.dart';
 import 'package:prj3/widgets/notification_detail.dart';
 import 'package:prj3/widgets/notification_icon.dart';
+import 'package:prj3/utils/common.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
@@ -47,7 +49,6 @@ class _NotificationListState extends State<NotificationList>
   @override
   void dispose() {
     _pListCtl.dispose();
-    _filterCtl.dispose();
     super.dispose();
   }
 
@@ -62,7 +63,8 @@ class _NotificationListState extends State<NotificationList>
           return GestureDetector(
             onTap: () {
               if (notification['status'] == 'unread') {
-                _notiCtl.markAsRead(notification['notificationId'],
+                _notiCtl.markAsRead(
+                    notification['notificationId'], notification['updatedAt'],
                     index: index);
               }
               Navigator.push(
@@ -90,10 +92,26 @@ class _NotificationListState extends State<NotificationList>
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              subtitle: Text(
-                notification['text'] ?? '',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    notification['text'] ?? '',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    notification['updatedAt'] != null
+                        ? HelperFunction.formatYYYYMMDD(
+                            notification['updatedAt'])
+                        : 'N/A',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
               ),
             ),
           );

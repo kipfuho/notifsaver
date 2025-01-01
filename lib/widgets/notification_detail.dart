@@ -1,4 +1,5 @@
 import 'package:prj3/controllers/notification_controller.dart';
+import 'package:prj3/utils/common.dart';
 import 'package:prj3/widgets/notification_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -47,17 +48,37 @@ class NotificationDetail extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    _buildDetailRow("Tag", notification['tag']),
-                    _buildDetailRow("Post Time", notification['postTime']),
-                    _buildDetailRow("Title", notification['title']),
-                    _buildDetailRow("Text", notification['text']),
-                    _buildDetailRow("Sub Text", notification['subText']),
-                    _buildDetailRow("Big Text", notification['bigText']),
-                    _buildDetailRow("Category", notification['category']),
-                    _buildDetailRow("Ticker Text", notification['tickerText']),
-                    _buildDetailRow("Priority", notification['priority']),
-                    _buildDetailRow("Channel ID", notification['channelId']),
-                    _buildDetailRow("Status", notification['status']),
+                    _buildDetailRow(
+                        Intl.message('tag', name: 'tag'), notification['tag']),
+                    _buildDetailRow(
+                        Intl.message('post_time', name: 'post_time'),
+                        HelperFunction.formatYYYYMMDDHHMMSS(
+                            notification['postTime'].toString())),
+                    _buildDetailRow(
+                        Intl.message('last_modified_time',
+                            name: 'last_modified_time'),
+                        HelperFunction.formatYYYYMMDDHHMMSS(
+                            notification['updatedAt'].toString())),
+                    _buildDetailRow(Intl.message('title', name: 'title'),
+                        notification['title']),
+                    _buildDetailRow(Intl.message('text', name: 'text'),
+                        notification['text']),
+                    _buildDetailRow(Intl.message('sub_text', name: 'sub_text'),
+                        notification['subText']),
+                    _buildDetailRow(Intl.message('big_text', name: 'big_text'),
+                        notification['bigText']),
+                    _buildDetailRow(Intl.message('category', name: 'category'),
+                        notification['category']),
+                    _buildDetailRow(
+                        Intl.message('ticker_text', name: 'ticker_text'),
+                        notification['tickerText']),
+                    _buildDetailRow(Intl.message('priority', name: 'priority'),
+                        notification['priority']),
+                    _buildDetailRow(
+                        Intl.message('channel_id', name: 'channel_id'),
+                        notification['channelId']),
+                    _buildDetailRow(Intl.message('status', name: 'status'),
+                        notification['status']),
                   ],
                 ),
               ),
@@ -95,8 +116,9 @@ class NotificationDetail extends StatelessWidget {
       return ElevatedButton(
         onPressed: () async {
           this.notiType.value = 'saved';
-          notificationController
-              .saveNotification(notification['notificationId'], index: index);
+          notificationController.saveNotification(
+              notification['notificationId'], notification['updatedAt'],
+              index: index);
         },
         child: Text(Intl.message('save', name: 'save')),
       );
@@ -105,8 +127,9 @@ class NotificationDetail extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         this.notiType.value = 'read';
-        notificationController
-            .unSaveNotification(notification['notificationId'], index: index);
+        notificationController.unSaveNotification(
+            notification['notificationId'], notification['updatedAt'],
+            index: index);
       },
       child: Text(Intl.message('unsave', name: 'unsave')),
     );

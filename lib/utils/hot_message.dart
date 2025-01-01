@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
 class HotMessage {
@@ -13,6 +14,10 @@ class HotMessage {
       margin: const EdgeInsets.all(10),
       borderRadius: 10,
     );
+  }
+
+  static void showError(String message) {
+    showSnackbar(Intl.message('error', name: 'error'), message);
   }
 
   static void showToast(String title, String message) {
