@@ -46,7 +46,7 @@ class AppIconManager {
       await prefs.setString(_appNameKeyPrefix + packageName, appName);
       return appName;
     } catch (err) {
-      // HotMessage.showError(err.toString());
+      HotMessage.showError(err.toString());
       return packageName;
     }
   }

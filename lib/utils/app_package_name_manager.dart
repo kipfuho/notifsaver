@@ -14,7 +14,7 @@ class AppPackageNameManager {
 
       return appNames;
     } catch (err) {
-      // HotMessage.showError(err.toString());
+      HotMessage.showError(err.toString());
       return [];
     }
   }
@@ -40,7 +40,7 @@ class AppPackageNameManager {
       List<String> appNames = await PlatformChannels.getAllInclusiveApp();
       return appNames;
     } catch (err) {
-      // HotMessage.showError(err.toString());
+      HotMessage.showError(err.toString());
       return [];
     }
   }

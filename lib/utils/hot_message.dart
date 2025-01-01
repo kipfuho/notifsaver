@@ -8,10 +8,10 @@ class HotMessage {
       title,
       message,
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.black54,
       colorText: Colors.white,
       duration: const Duration(seconds: 3),
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(4),
       borderRadius: 10,
     );
   }
@@ -25,10 +25,10 @@ class HotMessage {
       title,
       message,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.black54,
       colorText: Colors.white,
       duration: const Duration(seconds: 3),
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(4),
       borderRadius: 10,
     );
   }
