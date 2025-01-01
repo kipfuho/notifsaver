@@ -84,6 +84,9 @@ class NotificationController extends GetxController {
 
   Future<void> _saveNotificationToHive(
       Map<String, dynamic> notification) async {
+    // add createdAt and updatedAt
+    notification['createdAt'] = DateTime.now();
+    notification['updatedAt'] = DateTime.now();
     await notificationBox!.put(notification['notificationId'], notification);
     await PlatformChannels.removeNotificationFromTempStorage(
         notification['notificationId']);
@@ -118,21 +121,27 @@ class NotificationController extends GetxController {
             notification['status'] == 'unread' &&
             _compareToSearchQuery(notification,
                 searchText: searchText, searchApps: searchApps))
-        .toList();
+        .toList()
+      ..sort((a, b) => DateTime.parse(b['createdAt'])
+          .compareTo(DateTime.parse(a['createdAt'])));
 
     readNotifications.value = notificationBox!.values
         .where((notification) =>
             notification['status'] == 'read' &&
             _compareToSearchQuery(notification,
                 searchText: searchText, searchApps: searchApps))
-        .toList();
+        .toList()
+      ..sort((a, b) => DateTime.parse(b['updatedAt'])
+          .compareTo(DateTime.parse(a['updatedAt'])));
 
     savedNotifications.value = notificationBox!.values
         .where((notification) =>
             notification['status'] == 'saved' &&
             _compareToSearchQuery(notification,
                 searchText: searchText, searchApps: searchApps))
-        .toList();
+        .toList()
+      ..sort((a, b) => DateTime.parse(b['updatedAt'])
+          .compareTo(DateTime.parse(a['updatedAt'])));
 
     isLoading.value = false;
   }
@@ -215,6 +224,52 @@ class NotificationController extends GetxController {
       return savedNotifications;
     }
     return [].obs;
+  }
+
+  Future<Map<String, dynamic>> getPastNotificationList(
+      dynamic type, DateTime time,
+      {String? searchText, List<String>? searchApps}) async {
+    var pastBox = await Hive.openBox(AppConstants.getHiveBoxName(date: time));
+    if (type == 'unread') {
+      return {
+        'list': pastBox.values
+            .where((notification) =>
+                notification['status'] == 'unread' &&
+                _compareToSearchQuery(notification,
+                    searchText: searchText, searchApps: searchApps))
+            .toList()
+          ..sort((a, b) => DateTime.parse(b['createdAt'])
+              .compareTo(DateTime.parse(a['createdAt']))),
+        'shouldContinue': pastBox.values.isNotEmpty
+      };
+    }
+    if (type == 'read') {
+      return {
+        'list': pastBox.values
+            .where((notification) =>
+                notification['status'] == 'read' &&
+                _compareToSearchQuery(notification,
+                    searchText: searchText, searchApps: searchApps))
+            .toList()
+          ..sort((a, b) => DateTime.parse(b['updatedAt'])
+              .compareTo(DateTime.parse(a['updatedAt']))),
+        'shouldContinue': pastBox.values.isNotEmpty
+      };
+    }
+    if (type == 'saved') {
+      return {
+        'list': pastBox.values
+            .where((notification) =>
+                notification['status'] == 'saved' &&
+                _compareToSearchQuery(notification,
+                    searchText: searchText, searchApps: searchApps))
+            .toList()
+          ..sort((a, b) => DateTime.parse(b['updatedAt'])
+              .compareTo(DateTime.parse(a['updatedAt']))),
+        'shouldContinue': pastBox.values.isNotEmpty
+      };
+    }
+    return {'list': [], 'shouldContinue': false};
   }
 
   T deepClone<T>(T object) {
