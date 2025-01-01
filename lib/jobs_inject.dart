@@ -166,9 +166,9 @@ Future<void> syncData() async {
 
     // Search through the notifications
     for (var notification in jsonData.values) {
-      DateTime createdAt = DateTime.parse(notification['createdAt']);
+      DateTime updatedAt = DateTime.parse(notification['updatedAt']);
       var notiBox =
-          await Hive.openBox(AppConstants.getHiveBoxName(date: createdAt));
+          await Hive.openBox(AppConstants.getHiveBoxName(date: updatedAt));
       await notiBox.put(notification['notificationId'], notification);
     }
   }

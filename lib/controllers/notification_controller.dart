@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:prj3/constant.dart';
 import 'package:prj3/models/log_model.dart';
@@ -89,8 +91,6 @@ class NotificationController extends GetxController {
 
   Future<void> _saveNotificationToHive(
       Map<String, dynamic> notification) async {
-    // add createdAt and updatedAt
-    notification['createdAt'] = DateTime.now().toIso8601String();
     notification['updatedAt'] = DateTime.now().toIso8601String();
     await notificationBox!.put(notification['notificationId'], notification);
     await PlatformChannels.removeNotificationFromTempStorage(
@@ -130,8 +130,8 @@ class NotificationController extends GetxController {
             _compareToSearchQuery(notification,
                 searchText: searchText, searchApps: searchApps))
         .toList()
-      ..sort((a, b) => DateTime.parse(b['createdAt'])
-          .compareTo(DateTime.parse(a['createdAt'])));
+      ..sort((a, b) => DateTime.parse(b['updatedAt'])
+          .compareTo(DateTime.parse(a['updatedAt'])));
 
     readNotifications.value = notificationBox!.values
         .where((notification) =>
@@ -301,18 +301,48 @@ class NotificationController extends GetxController {
     return jsonDecode(jsonEncode(object)) as T;
   }
 
+  final List<Map<dynamic, dynamic>> testSample = [
+    {
+      'packageName': 'com.android.chrome',
+      'title': 'Test Chrome Notification',
+      'text': 'This is a test notification',
+      'status': 'unread',
+    },
+    {
+      'packageName': 'com.google.android.youtube',
+      'title': 'Test Youtube Notification',
+      'text': 'This is a test notification',
+      'status': 'unread',
+    },
+    {
+      'packageName': 'com.android.settings',
+      'title': 'Test Settings Notification',
+      'text': 'This is a test notification',
+      'status': 'unread',
+    },
+    {
+      'packageName': 'com.google.android.apps.photos',
+      'title': 'Test Photos Notification',
+      'text': 'This is a test notification',
+      'status': 'unread',
+    },
+    {
+      'packageName': 'com.google.android.dialer',
+      'title': 'Test Phone Notification',
+      'text': 'This is a test notification',
+      'status': 'unread',
+    }
+  ];
+
   Future<void> addNotificationForTest({DateTime? date}) async {
     DateTime currentDate = date ?? DateTime.now();
-    Map notification = {
-      'notificationId': 'test_notification_${DateTime.now().toIso8601String()}',
-      'packageName': 'com.test.app',
-      'title': 'Test Notification',
-      'text': 'This is a test notification',
-      'postTime': currentDate.toIso8601String(),
-      'status': 'unread',
-      'createdAt': currentDate.toIso8601String(),
-      'updatedAt': currentDate.toIso8601String(),
-    };
+    Random rand = Random();
+    int chosenOne = rand.nextInt(testSample.length);
+    var notification = deepClone(testSample[chosenOne]);
+    notification['notificationId'] =
+        '${notification['packageName']}_${DateTime.now().toIso8601String()}';
+    notification['postTime'] = currentDate.toIso8601String();
+    notification['updatedAt'] = currentDate.toIso8601String();
     var box =
         await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
     await box.put(notification['notificationId'], notification);
