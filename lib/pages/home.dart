@@ -143,7 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     currentDate.month == 1 ? 12 : currentDate.month - 1,
                     currentDate.day,
                   );
-                  notificationController.addNotificationForTest();
+                  notificationController.addNotificationForTest(
+                      date: currentDate);
                 },
                 child: const Text('Add Data 2'),
               ),

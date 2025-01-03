@@ -60,8 +60,12 @@ class PagingListController extends GetxController {
       searchApps: _filterCtl.searchParams['searchApps'],
       searchText: _filterCtl.searchParams['searchText'],
     );
-    itemList.addAll(result['list']);
-    currentListSize.value = itemList.length;
+
+    // Change currentListSize first so _fetchPage won't start
+    var preList = result['list'] as List<dynamic>;
+    currentListSize.value = itemList.length + preList.length;
+    itemList.value = [...itemList, ...result['list']];
+
     return result['shouldContinue'];
   }
 
@@ -69,8 +73,8 @@ class PagingListController extends GetxController {
     try {
       final startIndex = _pagingCtl.itemList?.length ?? 0;
       final endIndex = startIndex + pageSize.value;
-      if (startIndex >= itemList.length) {
-        while (startIndex >= itemList.length) {
+      if (endIndex > itemList.length) {
+        while (endIndex > itemList.length) {
           // Try fetch from past box
           var shouldContinue = await _fetchAnotherBox();
           if (!shouldContinue) break;
