@@ -4,6 +4,7 @@ import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:prj3/constant.dart';
+import 'package:prj3/controllers/network_controller.dart';
 import 'package:prj3/controllers/user_controller.dart';
 import 'package:prj3/google_service.dart';
 import 'package:prj3/models/log_model.dart';
@@ -11,7 +12,22 @@ import 'package:workmanager/workmanager.dart';
 import 'package:prj3/platform_channel.dart';
 import 'dart:convert';
 
+Future<void> _checkNetwork() async {
+  NetworkController networkCtl;
+  try {
+    networkCtl = Get.find();
+  } catch (e) {
+    networkCtl = Get.put(NetworkController());
+  }
+  bool internetAccess = await networkCtl.hasInternetAccess();
+  if (!internetAccess) {
+    throw Exception("Error saveNotification. No Internet Access");
+  }
+}
+
 Future<void> saveNotification() async {
+  await _checkNetwork();
+
   // Call Android to retrieve unprocessed notifications
   final List<dynamic> unprocessedNotifications =
       await PlatformChannels.getUnprocessedNotificationsFromTempStorage();
@@ -47,6 +63,8 @@ dynamic _convertToEncodable(dynamic value) {
 }
 
 Future<void> backupToDrive() async {
+  await _checkNetwork();
+
   if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
     var appDir = await getApplicationDocumentsDirectory();
     Hive.init(appDir.path);
@@ -106,6 +124,8 @@ Future<void> backupToDrive() async {
 
 Future<void> deleteLogs() async {
   // TODO: disable logs for production
+  await _checkNetwork();
+
   if (!Hive.isBoxOpen(AppConstants.logs)) {
     var appDir = await getApplicationDocumentsDirectory();
     Hive.init(appDir.path);
@@ -130,7 +150,8 @@ Future<void> deleteLogs() async {
 }
 
 Future<void> syncData() async {
-  print('start sync data');
+  await _checkNetwork();
+
   UserController userController;
   try {
     userController = Get.find();
@@ -175,7 +196,6 @@ Future<void> syncData() async {
 
   await backupToDrive();
   userController.finishSyncData();
-  print('stop sync data');
 }
 
 void callbackDispatcher() {
