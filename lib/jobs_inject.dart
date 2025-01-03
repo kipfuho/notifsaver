@@ -26,8 +26,6 @@ Future<void> _checkNetwork() async {
 }
 
 Future<void> saveNotification() async {
-  await _checkNetwork();
-
   // Call Android to retrieve unprocessed notifications
   final List<dynamic> unprocessedNotifications =
       await PlatformChannels.getUnprocessedNotificationsFromTempStorage();
@@ -39,12 +37,19 @@ Future<void> saveNotification() async {
   }
   var notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
   for (String notificationJson in unprocessedNotifications) {
-    var notification = jsonDecode(notificationJson);
-    await notificationBox.put(notification['notificationId'], notification);
+    try {
+      var notification = jsonDecode(notificationJson);
+      notification['postTime'] =
+          DateTime(notification['postTime']).toIso8601String();
+      notification['updatedAt'] = DateTime.now().toIso8601String();
+      await notificationBox.put(notification['notificationId'], notification);
 
-    // Call Android to remove notification from temp storage after saving
-    await PlatformChannels.removeNotificationFromTempStorage(
-        notification['notificationId']);
+      // Call Android to remove notification from temp storage after saving
+      await PlatformChannels.removeNotificationFromTempStorage(
+          notification['notificationId']);
+    } catch (err) {
+      LogModel.logError("Error _saveNotificationToHive. $err");
+    }
   }
 }
 

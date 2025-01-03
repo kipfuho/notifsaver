@@ -3,7 +3,6 @@ part of 'notification_list.dart';
 class PagingListController extends GetxController {
   final String notiType;
   var pageSize = 20.obs;
-  Rx<DateTime> currentDate = (DateTime.now()).obs;
   late final RxList<dynamic> itemList;
   final RxInt currentListSize = 0.obs;
   final PagingController<int, dynamic> _pagingCtl =
@@ -46,17 +45,10 @@ class PagingListController extends GetxController {
     });
   }
 
-  Future<bool> _fetchAnotherBox() async {
-    currentDate.value = DateTime(
-      currentDate.value.month == 1
-          ? currentDate.value.year - 1
-          : currentDate.value.year,
-      currentDate.value.month == 1 ? 12 : currentDate.value.month - 1,
-      currentDate.value.day,
-    );
+  Future<bool> _fetchAnotherBox(DateTime currentDate) async {
     var result = await _notiCtl.getPastNotificationList(
       notiType,
-      currentDate.value,
+      currentDate,
       searchApps: _filterCtl.searchParams['searchApps'],
       searchText: _filterCtl.searchParams['searchText'],
     );
@@ -64,7 +56,7 @@ class PagingListController extends GetxController {
     // Change currentListSize first so _fetchPage won't start
     var preList = result['list'] as List<dynamic>;
     currentListSize.value = itemList.length + preList.length;
-    itemList.value = [...itemList, ...result['list']];
+    itemList.addAll(result['list']);
 
     return result['shouldContinue'];
   }
@@ -74,9 +66,15 @@ class PagingListController extends GetxController {
       final startIndex = _pagingCtl.itemList?.length ?? 0;
       final endIndex = startIndex + pageSize.value;
       if (endIndex > itemList.length) {
+        var currentDate = DateTime.now();
         while (endIndex > itemList.length) {
           // Try fetch from past box
-          var shouldContinue = await _fetchAnotherBox();
+          currentDate = DateTime(
+            currentDate.month == 1 ? currentDate.year - 1 : currentDate.year,
+            currentDate.month == 1 ? 12 : currentDate.month - 1,
+            currentDate.day,
+          );
+          var shouldContinue = await _fetchAnotherBox(currentDate);
           if (!shouldContinue) break;
         }
       }

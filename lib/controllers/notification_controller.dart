@@ -91,11 +91,19 @@ class NotificationController extends GetxController {
 
   Future<void> _saveNotificationToHive(
       Map<String, dynamic> notification) async {
-    notification['updatedAt'] = DateTime.now().toIso8601String();
-    await notificationBox!.put(notification['notificationId'], notification);
-    await PlatformChannels.removeNotificationFromTempStorage(
-        notification['notificationId']);
-    await filterNotifications();
+    try {
+      notification['postTime'] =
+          DateTime(notification['postTime']).toIso8601String();
+      notification['updatedAt'] = DateTime.now().toIso8601String();
+      await notificationBox!.put(notification['notificationId'], notification);
+      await PlatformChannels.removeNotificationFromTempStorage(
+          notification['notificationId']);
+    } catch (err) {
+      LogModel.logError("Error _saveNotificationToHive. $err");
+      HotMessage.showError("Có lỗi xảy ra khi lưu thông báo: $err");
+    } finally {
+      await filterNotifications();
+    }
   }
 
   Future<void> _initNotificationBox() async {
