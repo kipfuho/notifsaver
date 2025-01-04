@@ -57,12 +57,15 @@ class ProfilePage extends StatelessWidget {
                   );
                   return;
                 }
-                syncData();
+                await syncData();
               },
               child: Obx(
                 () {
+                  print(_userController.syncStatus.value);
                   if (_userController.syncStatus.value == 1) {
-                    return CircularProgressIndicator();
+                    return SizedBox.square(
+                        dimension: 15,
+                        child: const CircularProgressIndicator());
                   } else if (_userController.syncStatus.value == 2) {
                     return Text(Intl.message('sync_done', name: 'sync_done'));
                   } else {

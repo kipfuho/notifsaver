@@ -160,13 +160,9 @@ Future<void> deleteLogs() async {
 }
 
 Future<void> syncData() async {
-  UserController? userController;
-  try {
-    userController = Get.find();
-  } catch (e) {
-    userController = Get.put(UserController());
-  }
-  userController?.startSyncData();
+  UserController userController;
+  userController = Get.find();
+  userController.startSyncData();
 
   try {
     await _checkNetwork();
@@ -207,7 +203,7 @@ Future<void> syncData() async {
 
     await backupToDrive();
   } finally {
-    userController?.finishSyncData();
+    userController.finishSyncData();
   }
 }
 
