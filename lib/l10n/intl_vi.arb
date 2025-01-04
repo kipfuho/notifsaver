@@ -31,5 +31,7 @@
   "sync_in_progress": "Đang đồng bộ",
   "sync_done": "Đồng bộ hoàn tất",
   "error": "Lỗi",
-  "no_internet": "Không có kết nối Internet"
+  "no_internet": "Không có kết nối Internet",
+  "new_notification": "Thông báo mới",
+  "no_new_notification": "Hiện không có thông báo mới",
 }

@@ -12,7 +12,7 @@ import 'dart:async';
 import 'package:prj3/utils/hot_message.dart';
 
 class NotificationController extends GetxController {
-  var notificationData = 'No notifications received'.obs;
+  var notificationData = {}.obs;
   var unreadNotifications = <dynamic>[].obs;
   var readNotifications = <dynamic>[].obs;
   var savedNotifications = <dynamic>[].obs;
@@ -56,22 +56,17 @@ class NotificationController extends GetxController {
         Map<String, dynamic> notificationJson = jsonDecode(event);
 
         // Update the notificationData for UI display
-        notificationData.value = """
-          Package: ${notificationJson['packageName']}
-          Title: ${notificationJson['title']}
-          Text: ${notificationJson['text']}
-          Time: ${notificationJson['postTime']}
-        """;
+        notificationData.value = notificationJson;
 
         // Add notification to queue instead of saving directly
-        _addToQueue(notificationJson);
+        _addToQueue(deepClone(notificationJson));
       } catch (err) {
         HotMessage.showError(err.toString());
-        notificationData.value = "Failed to parse notification: $err";
+        notificationData.value = {};
       }
-    }, onError: (error) {
-      notificationData.value =
-          "Failed to listen to notifications: ${error.message}";
+    }, onError: (err) {
+      HotMessage.showError(err.message);
+      notificationData.value = {};
     });
   }
 
@@ -93,7 +88,7 @@ class NotificationController extends GetxController {
       Map<String, dynamic> notification) async {
     try {
       notification['postTime'] =
-          DateTime.fromMicrosecondsSinceEpoch(notification['postTime'])
+          DateTime.fromMillisecondsSinceEpoch(notification['postTime'])
               .toIso8601String();
       notification['updatedAt'] = DateTime.now().toIso8601String();
       await notificationBox!.put(notification['notificationId'], notification);

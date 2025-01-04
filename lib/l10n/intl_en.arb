@@ -31,5 +31,7 @@
   "sync_in_progress": "Sync in progress",
   "sync_done": "Sync done!",
   "error": "Error",
-  "no_internet": "Cannot connect to Internet"
+  "no_internet": "Cannot connect to Internet",
+  "new_notification": "New notification",
+  "no_new_notification": "No new notification currently",
 }

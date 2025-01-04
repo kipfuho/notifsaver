@@ -100,6 +100,9 @@ class _NotificationListState extends State<NotificationList>
                   notification['title'] ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

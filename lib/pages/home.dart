@@ -3,6 +3,7 @@ import 'package:prj3/controllers/notification_controller.dart';
 import 'package:prj3/controllers/user_controller.dart';
 import 'package:prj3/jobs_inject.dart';
 import 'package:prj3/pages/filter.dart';
+import 'package:prj3/widgets/notification_icon.dart';
 import 'package:prj3/widgets/notification_list.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:prj3/pages/setting.dart';
@@ -111,8 +112,74 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          Obx(() => Text(
-              'Notification Data: ${notificationController.notificationData}')),
+          Obx(() {
+            if (notificationController.notificationData.isEmpty) {
+              return Center(
+                child: Text(
+                  Intl.message('no_new_notification',
+                      name: 'no_new_notification'),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                ),
+              );
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      Intl.message('new_notification',
+                          name: 'new_notification'),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 32),
+                    NotificationIcon(
+                      packageName: notificationController
+                          .notificationData['packageName'],
+                    ),
+                    SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          notificationController.notificationData['title'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          notificationController.notificationData['text'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          DateTime.fromMillisecondsSinceEpoch(
+                                  notificationController
+                                      .notificationData['postTime'])
+                              .toLocal()
+                              .toString()
+                              .substring(0, 19),
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            );
+          }),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
