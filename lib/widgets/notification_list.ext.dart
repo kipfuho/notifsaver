@@ -86,6 +86,10 @@ class PagingListController extends GetxController {
         }
       }
 
+      if (startIndex >= itemList.length) {
+        _pagingCtl.appendLastPage(<Map<dynamic, dynamic>>[]);
+        return;
+      }
 
       final newItems = itemList
           .sublist(
