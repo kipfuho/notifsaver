@@ -40,7 +40,8 @@ Future<void> saveNotification() async {
     try {
       var notification = jsonDecode(notificationJson);
       notification['postTime'] =
-          DateTime(notification['postTime']).toIso8601String();
+          DateTime.fromMicrosecondsSinceEpoch(notification['postTime'])
+              .toIso8601String();
       notification['updatedAt'] = DateTime.now().toIso8601String();
       await notificationBox.put(notification['notificationId'], notification);
 
