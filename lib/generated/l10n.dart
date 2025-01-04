@@ -379,6 +379,96 @@ class S {
       args: [],
     );
   }
+
+  /// `New notification`
+  String get new_notification {
+    return Intl.message(
+      'New notification',
+      name: 'new_notification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No new notification currently`
+  String get no_new_notification {
+    return Intl.message(
+      'No new notification currently',
+      name: 'no_new_notification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User profile`
+  String get user_profile {
+    return Intl.message(
+      'User profile',
+      name: 'user_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filter notification`
+  String get filter_notification {
+    return Intl.message(
+      'Filter notification',
+      name: 'filter_notification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search notification text`
+  String get search_notification {
+    return Intl.message(
+      'Search notification text',
+      name: 'search_notification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start date`
+  String get start_date {
+    return Intl.message(
+      'Start date',
+      name: 'start_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End date`
+  String get end_date {
+    return Intl.message(
+      'End date',
+      name: 'end_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not selected`
+  String get not_selected {
+    return Intl.message(
+      'Not selected',
+      name: 'not_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select date range`
+  String get select_date_range {
+    return Intl.message(
+      'Select date range',
+      name: 'select_date_range',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

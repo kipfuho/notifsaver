@@ -27,7 +27,7 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User Profile'),
+        title: Text(Intl.message('user_profile', name: 'user_profile')),
       ),
       body: Center(
         child: Column(

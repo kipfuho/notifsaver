@@ -25,19 +25,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "big_text": MessageLookupByLibrary.simpleMessage("Nội dung dài"),
         "category": MessageLookupByLibrary.simpleMessage("Danh mục"),
         "channel_id": MessageLookupByLibrary.simpleMessage("Id kênh"),
+        "end_date": MessageLookupByLibrary.simpleMessage("Ngày kết thúc"),
         "error": MessageLookupByLibrary.simpleMessage("Lỗi"),
+        "filter_notification":
+            MessageLookupByLibrary.simpleMessage("Lọc thông báo"),
         "home": MessageLookupByLibrary.simpleMessage("Trang chủ"),
         "last_modified_time":
             MessageLookupByLibrary.simpleMessage("Lần cuối chỉnh sửa"),
         "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
         "login_google":
             MessageLookupByLibrary.simpleMessage("Đăng nhập với Google"),
+        "new_notification":
+            MessageLookupByLibrary.simpleMessage("Thông báo mới"),
         "no_internet":
             MessageLookupByLibrary.simpleMessage("Không có kết nối Internet"),
         "no_login":
             MessageLookupByLibrary.simpleMessage("Tiếp tục mà không đăng nhập"),
+        "no_new_notification":
+            MessageLookupByLibrary.simpleMessage("Hiện không có thông báo mới"),
         "no_notifications":
             MessageLookupByLibrary.simpleMessage("Không có thông báo nào"),
+        "not_selected": MessageLookupByLibrary.simpleMessage("Không chọn"),
         "notification_detail":
             MessageLookupByLibrary.simpleMessage("Chi tiết thông báo"),
         "post_time":
@@ -46,6 +54,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "read": MessageLookupByLibrary.simpleMessage("Đã đọc"),
         "save": MessageLookupByLibrary.simpleMessage("Lưu"),
         "saved": MessageLookupByLibrary.simpleMessage("Đã lưu"),
+        "search_notification":
+            MessageLookupByLibrary.simpleMessage("Tìm nội dung thông báo"),
+        "select_date_range":
+            MessageLookupByLibrary.simpleMessage("Chọn khoảng thời gian"),
         "settings_inclusiveApps": MessageLookupByLibrary.simpleMessage(
             "Các ứng dụng cho phép đọc thông báo"),
         "settings_openNotificationSetting":
@@ -55,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Chọn ngôn ngữ"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Cài đặt"),
         "sign_out": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
+        "start_date": MessageLookupByLibrary.simpleMessage("Ngày bắt đầu"),
         "status": MessageLookupByLibrary.simpleMessage("Trạng thái"),
         "sub_text": MessageLookupByLibrary.simpleMessage("Nội dung phụ"),
         "sync_data": MessageLookupByLibrary.simpleMessage("Đồng bộ dữ liệu"),
@@ -66,6 +79,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "ticker_text": MessageLookupByLibrary.simpleMessage("Nội dung cuộn"),
         "title": MessageLookupByLibrary.simpleMessage("Tiêu đề"),
         "unread": MessageLookupByLibrary.simpleMessage("Chưa đọc"),
-        "unsave": MessageLookupByLibrary.simpleMessage("Bỏ lưu")
+        "unsave": MessageLookupByLibrary.simpleMessage("Bỏ lưu"),
+        "user_profile":
+            MessageLookupByLibrary.simpleMessage("Thông tin người dùng")
       };
 }

@@ -34,4 +34,11 @@
   "no_internet": "Không có kết nối Internet",
   "new_notification": "Thông báo mới",
   "no_new_notification": "Hiện không có thông báo mới",
+  "user_profile": "Thông tin người dùng",
+  "filter_notification": "Lọc thông báo",
+  "search_notification": "Tìm nội dung thông báo",
+  "start_date": "Ngày bắt đầu",
+  "end_date": "Ngày kết thúc",
+  "not_selected": "Không chọn",
+  "select_date_range": "Chọn khoảng thời gian"
 }

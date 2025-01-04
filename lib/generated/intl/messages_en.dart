@@ -25,19 +25,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "big_text": MessageLookupByLibrary.simpleMessage("Big Text"),
         "category": MessageLookupByLibrary.simpleMessage("Category"),
         "channel_id": MessageLookupByLibrary.simpleMessage("Channel Id"),
+        "end_date": MessageLookupByLibrary.simpleMessage("End date"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
+        "filter_notification":
+            MessageLookupByLibrary.simpleMessage("Filter notification"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "last_modified_time":
             MessageLookupByLibrary.simpleMessage("Last Modified Time"),
         "login": MessageLookupByLibrary.simpleMessage("Log in"),
         "login_google":
             MessageLookupByLibrary.simpleMessage("Log in with Google"),
+        "new_notification":
+            MessageLookupByLibrary.simpleMessage("New notification"),
         "no_internet":
             MessageLookupByLibrary.simpleMessage("Cannot connect to Internet"),
         "no_login":
             MessageLookupByLibrary.simpleMessage("Proceed without log in"),
+        "no_new_notification": MessageLookupByLibrary.simpleMessage(
+            "No new notification currently"),
         "no_notifications":
             MessageLookupByLibrary.simpleMessage("There\'s no notifications"),
+        "not_selected": MessageLookupByLibrary.simpleMessage("Not selected"),
         "notification_detail":
             MessageLookupByLibrary.simpleMessage("Notification detail"),
         "post_time": MessageLookupByLibrary.simpleMessage("Post Time"),
@@ -45,6 +53,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "read": MessageLookupByLibrary.simpleMessage("Read"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saved": MessageLookupByLibrary.simpleMessage("Saved"),
+        "search_notification":
+            MessageLookupByLibrary.simpleMessage("Search notification text"),
+        "select_date_range":
+            MessageLookupByLibrary.simpleMessage("Select date range"),
         "settings_inclusiveApps": MessageLookupByLibrary.simpleMessage(
             "Apps to read notifications from"),
         "settings_openNotificationSetting":
@@ -54,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Select Language"),
         "settings_title": MessageLookupByLibrary.simpleMessage("Settings"),
         "sign_out": MessageLookupByLibrary.simpleMessage("Sign out"),
+        "start_date": MessageLookupByLibrary.simpleMessage("Start date"),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "sub_text": MessageLookupByLibrary.simpleMessage("Sub Text"),
         "sync_data": MessageLookupByLibrary.simpleMessage("Sync data"),
@@ -65,6 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "ticker_text": MessageLookupByLibrary.simpleMessage("Ticker Text"),
         "title": MessageLookupByLibrary.simpleMessage("Title"),
         "unread": MessageLookupByLibrary.simpleMessage("Unread"),
-        "unsave": MessageLookupByLibrary.simpleMessage("Unsave")
+        "unsave": MessageLookupByLibrary.simpleMessage("Unsave"),
+        "user_profile": MessageLookupByLibrary.simpleMessage("User profile")
       };
 }

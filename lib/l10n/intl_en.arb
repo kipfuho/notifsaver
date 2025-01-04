@@ -34,4 +34,11 @@
   "no_internet": "Cannot connect to Internet",
   "new_notification": "New notification",
   "no_new_notification": "No new notification currently",
+  "user_profile": "User profile",
+  "filter_notification": "Filter notification",
+  "search_notification": "Search notification text",
+  "start_date": "Start date",
+  "end_date": "End date",
+  "not_selected": "Not selected",
+  "select_date_range": "Select date range"
 }

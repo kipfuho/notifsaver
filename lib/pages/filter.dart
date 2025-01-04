@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:prj3/controllers/filter_controller.dart';
 import 'package:prj3/controllers/installed_app_controller.dart';
 import 'package:prj3/models/log_model.dart';
@@ -76,14 +77,17 @@ class _FilterScreenState extends State<FilterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Filter Notifications')),
+      appBar: AppBar(
+          title: Text(Intl.message('filter_notification',
+              name: 'filter_notification'))),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             TextField(
-              decoration: const InputDecoration(
-                labelText: 'Search notification',
+              decoration: InputDecoration(
+                labelText: Intl.message('search_notification',
+                    name: 'search_notification'),
                 border: OutlineInputBorder(),
               ),
               controller: TextEditingController(text: searchText),
@@ -101,17 +105,18 @@ class _FilterScreenState extends State<FilterScreen> {
                   children: [
                     Text(
                       startDate != null
-                          ? "Start Date: ${startDate!.toLocal().toString().split(' ')[0]}"
-                          : "Start Date: Not selected",
+                          ? "${Intl.message('start_date', name: 'start_date')}: ${startDate!.toLocal().toString().split(' ')[0]}"
+                          : "${Intl.message('start_date', name: 'start_date')}: ${Intl.message('not_selected', name: 'not_selected')}",
                     ),
                     Text(
                       endDate != null
-                          ? "End Date: ${endDate!.toLocal().toString().split(' ')[0]}"
-                          : "End Date: Not selected",
+                          ? "${Intl.message('end_date', name: 'end_date')}: ${endDate!.toLocal().toString().split(' ')[0]}"
+                          : "${Intl.message('end_date', name: 'end_date')}: ${Intl.message('not_selected', name: 'not_selected')}",
                     ),
                     ElevatedButton(
                       onPressed: _selectDateRange,
-                      child: const Text("Select Date Range"),
+                      child: Text(Intl.message('select_date_range',
+                          name: 'select_date_range')),
                     ),
                   ],
                 )),
