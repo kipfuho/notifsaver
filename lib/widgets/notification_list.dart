@@ -39,6 +39,8 @@ class _NotificationListState extends State<NotificationList>
           await _notiCtl.filterNotifications(
             searchApps: _filterCtl.searchParams['searchApps'],
             searchText: _filterCtl.searchParams['searchText'],
+            startDate: _filterCtl.searchParams['startDate'],
+            endDate: _filterCtl.searchParams['endDate'],
           );
         }
         _pListCtl.refreshList();

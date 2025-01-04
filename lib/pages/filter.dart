@@ -18,6 +18,8 @@ class _FilterScreenState extends State<FilterScreen> {
   final FilterController _filterController = Get.find();
   final selectedApps = <String, dynamic>{}.obs;
   String searchText = '';
+  DateTime? startDate;
+  DateTime? endDate;
 
   @override
   void initState() {
@@ -32,6 +34,8 @@ class _FilterScreenState extends State<FilterScreen> {
       }
       setState(() {
         searchText = _filterController.getSearchText();
+        startDate = _filterController.getStartDate();
+        endDate = _filterController.getEndDate();
       });
     } catch (err) {
       HotMessage.showError(err.toString());
@@ -41,7 +45,29 @@ class _FilterScreenState extends State<FilterScreen> {
 
   void applyFilter() {
     _filterController.setSearchParams(
-        searchText: searchText, selectedApps: selectedApps.keys.toList());
+      searchText: searchText,
+      selectedApps: selectedApps.keys.toList(),
+      startDate: startDate,
+      endDate: endDate,
+    );
+  }
+
+  Future<void> _selectDateRange() async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      initialDateRange: startDate != null && endDate != null
+          ? DateTimeRange(start: startDate!, end: endDate!)
+          : null,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        startDate = picked.start;
+        endDate = picked.end;
+      });
+    }
   }
 
   @override
@@ -64,6 +90,28 @@ class _FilterScreenState extends State<FilterScreen> {
                 });
               },
             ),
+            const SizedBox(height: 10),
+            Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      startDate != null
+                          ? "Start Date: ${startDate!.toLocal().toString().split(' ')[0]}"
+                          : "Start Date: Not selected",
+                    ),
+                    Text(
+                      endDate != null
+                          ? "End Date: ${endDate!.toLocal().toString().split(' ')[0]}"
+                          : "End Date: Not selected",
+                    ),
+                    ElevatedButton(
+                      onPressed: _selectDateRange,
+                      child: const Text("Select Date Range"),
+                    ),
+                  ],
+                )),
             const SizedBox(height: 10),
             Flexible(
               child: ListView.builder(

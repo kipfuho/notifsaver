@@ -20,12 +20,32 @@ class FilterController extends GetxController {
     return [];
   }
 
-  void setSearchParams({String? searchText, List<String>? selectedApps}) {
+  DateTime? getStartDate() {
+    var startDate = searchParams['startDate'];
+    return startDate;
+  }
+
+  DateTime? getEndDate() {
+    var endDate = searchParams['endDate'];
+    return endDate;
+  }
+
+  void setSearchParams(
+      {String? searchText,
+      List<String>? selectedApps,
+      DateTime? startDate,
+      DateTime? endDate}) {
     if (searchText!.isNotEmpty) {
       searchParams['searchText'] = searchText.toLowerCase();
     }
     if (selectedApps!.isNotEmpty) {
       searchParams['searchApps'] = selectedApps;
+    }
+    if (startDate != null) {
+      searchParams['startDate'] = startDate;
+    }
+    if (endDate != null) {
+      searchParams['endDate'] = endDate;
     }
     isSearching.value = true;
   }

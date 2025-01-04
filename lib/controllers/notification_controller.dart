@@ -111,21 +111,51 @@ class NotificationController extends GetxController {
     await filterNotifications();
   }
 
-  bool _compareToSearchQuery(dynamic notification,
-      {String? searchText, List<String>? searchApps}) {
+  bool _compareToSearchQuery(
+    dynamic notification, {
+    String? searchText,
+    List<String>? searchApps,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
     bool containSearchText = true;
     bool isInSearchApps = true;
+    bool inSearchDateRange = true;
+
+    // Check if the notification contains the search text
     if (searchText != null && searchText.isNotEmpty) {
-      containSearchText = notification['text'].contains('searchText');
+      containSearchText =
+          notification['text'].toString().toLowerCase().contains(searchText);
     }
-    if (searchApps != null && searchApps != []) {
+
+    // Check if the notification's app is in the search apps list
+    if (searchApps != null && searchApps.isNotEmpty) {
       isInSearchApps = searchApps.contains(notification['packageName']);
     }
-    return containSearchText && isInSearchApps;
+
+    // Check if the notification's date is within the range
+    if (startDate != null || endDate != null) {
+      DateTime notificationLastModifiedDate =
+          DateTime.parse(notification['updatedAt']);
+      if (startDate != null) {
+        inSearchDateRange = notificationLastModifiedDate.isAfter(startDate) ||
+            notificationLastModifiedDate.isAtSameMomentAs(startDate);
+      }
+      if (endDate != null) {
+        inSearchDateRange = notificationLastModifiedDate.isBefore(endDate) ||
+            notificationLastModifiedDate.isAtSameMomentAs(endDate);
+      }
+    }
+
+    return containSearchText && isInSearchApps && inSearchDateRange;
   }
 
-  Future<void> filterNotifications(
-      {String? searchText, List<String>? searchApps}) async {
+  Future<void> filterNotifications({
+    String? searchText,
+    List<String>? searchApps,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     if (notificationBox == null) return;
     isLoading.value = true;
     if (!notificationBox!.isOpen) {
@@ -136,7 +166,10 @@ class NotificationController extends GetxController {
         .where((notification) =>
             notification['status'] == 'unread' &&
             _compareToSearchQuery(notification,
-                searchText: searchText, searchApps: searchApps))
+                searchText: searchText,
+                searchApps: searchApps,
+                startDate: startDate,
+                endDate: endDate))
         .toList()
       ..sort((a, b) => DateTime.parse(b['updatedAt'])
           .compareTo(DateTime.parse(a['updatedAt'])));
@@ -145,7 +178,10 @@ class NotificationController extends GetxController {
         .where((notification) =>
             notification['status'] == 'read' &&
             _compareToSearchQuery(notification,
-                searchText: searchText, searchApps: searchApps))
+                searchText: searchText,
+                searchApps: searchApps,
+                startDate: startDate,
+                endDate: endDate))
         .toList()
       ..sort((a, b) => DateTime.parse(b['updatedAt'])
           .compareTo(DateTime.parse(a['updatedAt'])));
@@ -154,7 +190,10 @@ class NotificationController extends GetxController {
         .where((notification) =>
             notification['status'] == 'saved' &&
             _compareToSearchQuery(notification,
-                searchText: searchText, searchApps: searchApps))
+                searchText: searchText,
+                searchApps: searchApps,
+                startDate: startDate,
+                endDate: endDate))
         .toList()
       ..sort((a, b) => DateTime.parse(b['updatedAt'])
           .compareTo(DateTime.parse(a['updatedAt'])));
@@ -260,8 +299,13 @@ class NotificationController extends GetxController {
   }
 
   Future<Map<String, dynamic>> getPastNotificationList(
-      dynamic type, DateTime time,
-      {String? searchText, List<String>? searchApps}) async {
+    dynamic type,
+    DateTime time, {
+    String? searchText,
+    List<String>? searchApps,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     var pastBox = await Hive.openBox(AppConstants.getHiveBoxName(date: time));
     if (type == 'unread') {
       return {
@@ -269,7 +313,10 @@ class NotificationController extends GetxController {
             .where((notification) =>
                 notification['status'] == 'unread' &&
                 _compareToSearchQuery(notification,
-                    searchText: searchText, searchApps: searchApps))
+                    searchText: searchText,
+                    searchApps: searchApps,
+                    startDate: startDate,
+                    endDate: endDate))
             .toList()
           ..sort((a, b) => DateTime.parse(b['updatedAt'])
               .compareTo(DateTime.parse(a['updatedAt']))),
@@ -282,7 +329,10 @@ class NotificationController extends GetxController {
             .where((notification) =>
                 notification['status'] == 'read' &&
                 _compareToSearchQuery(notification,
-                    searchText: searchText, searchApps: searchApps))
+                    searchText: searchText,
+                    searchApps: searchApps,
+                    startDate: startDate,
+                    endDate: endDate))
             .toList()
           ..sort((a, b) => DateTime.parse(b['updatedAt'])
               .compareTo(DateTime.parse(a['updatedAt']))),
@@ -295,7 +345,10 @@ class NotificationController extends GetxController {
             .where((notification) =>
                 notification['status'] == 'saved' &&
                 _compareToSearchQuery(notification,
-                    searchText: searchText, searchApps: searchApps))
+                    searchText: searchText,
+                    searchApps: searchApps,
+                    startDate: startDate,
+                    endDate: endDate))
             .toList()
           ..sort((a, b) => DateTime.parse(b['updatedAt'])
               .compareTo(DateTime.parse(a['updatedAt']))),

@@ -51,12 +51,18 @@ class PagingListController extends GetxController {
       currentDate,
       searchApps: _filterCtl.searchParams['searchApps'],
       searchText: _filterCtl.searchParams['searchText'],
+      startDate: _filterCtl.searchParams['startDate'],
+      endDate: _filterCtl.searchParams['endDate'],
     );
 
-    // Change currentListSize first so _fetchPage won't start
     var preList = result['list'] as List<dynamic>;
-    currentListSize.value = itemList.length + preList.length;
-    itemList.addAll(result['list']);
+    var existingItems = itemList.toSet();
+    var newItems =
+        preList.where((item) => !existingItems.contains(item)).toList();
+
+    // Change currentListSize first so _fetchPage won't start
+    currentListSize.value = itemList.length + newItems.length;
+    itemList.addAll(newItems);
 
     return result['shouldContinue'];
   }
