@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserController extends GetxController {
-  var user = Rx<User?>(null); // Reactive variable to hold the user state
-  var syncStatus = 0.obs;
+  final user = Rx<User?>(null); // Reactive finaliable to hold the user state
+  final syncStatus = 0.obs;
 
   void startSyncData() {
     syncStatus.value = 1;

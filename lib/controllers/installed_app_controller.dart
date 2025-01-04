@@ -17,13 +17,13 @@ class InstalledAppController extends GetxController {
   Future<void> _initSettingSelectedApp() async {
     List<String> inclusiveAppNames =
         await PlatformChannels.getAllInclusiveApp();
-    for (var name in inclusiveAppNames) {
+    for (final name in inclusiveAppNames) {
       settingSelectedApps[name] = true;
     }
   }
 
   Future<void> _loadDisplayNameForApps() async {
-    for (var appName in allApps) {
+    for (final appName in allApps) {
       String displayName = await PlatformChannels.getAppName(appName);
       displayAppName[appName] = displayName;
     }

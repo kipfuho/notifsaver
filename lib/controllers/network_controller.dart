@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:prj3/utils/hot_message.dart';
 
 class NetworkController extends GetxController {
-  var hasNetworkAccess = false.obs;
+  final hasNetworkAccess = false.obs;
 
   @override
   void onInit() {

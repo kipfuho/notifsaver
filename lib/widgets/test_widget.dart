@@ -4,7 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:prj3/utils/hot_message.dart';
 
 class ListController extends GetxController {
-  var list = <Map<String, String>>[];
+  final list = <Map<String, String>>[];
 
   @override
   void onInit() {

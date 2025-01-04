@@ -2,7 +2,7 @@ part of 'notification_list.dart';
 
 class PagingListController extends GetxController {
   final String notiType;
-  var pageSize = 20.obs;
+  final pageSize = 20.obs;
   late final RxList<dynamic> itemList;
   final RxInt currentListSize = 0.obs;
   final PagingController<int, dynamic> _pagingCtl =
@@ -47,7 +47,7 @@ class PagingListController extends GetxController {
   }
 
   Future<bool> _fetchAnotherBox(DateTime currentDate) async {
-    var result = await _notiCtl.getPastNotificationList(
+    final result = await _notiCtl.getPastNotificationList(
       notiType,
       currentDate,
       searchApps: _filterCtl.searchParams['searchApps'],
@@ -56,9 +56,9 @@ class PagingListController extends GetxController {
       endDate: _filterCtl.searchParams['endDate'],
     );
 
-    var preList = result['list'] as List<dynamic>;
-    var existingItems = itemList.toSet();
-    var newItems =
+    final preList = result['list'] as List<dynamic>;
+    final existingItems = itemList.toSet();
+    final newItems =
         preList.where((item) => !existingItems.contains(item)).toList();
 
     // Change currentListSize first so _fetchPage won't start
@@ -73,7 +73,7 @@ class PagingListController extends GetxController {
       final startIndex = _pagingCtl.itemList?.length ?? 0;
       final endIndex = startIndex + pageSize.value;
       if (endIndex > itemList.length) {
-        var currentDate = DateTime.now();
+        DateTime currentDate = DateTime.now();
         while (endIndex > itemList.length) {
           // Try fetch from past box
           currentDate = DateTime(
@@ -81,15 +81,11 @@ class PagingListController extends GetxController {
             currentDate.month == 1 ? 12 : currentDate.month - 1,
             currentDate.day,
           );
-          var shouldContinue = await _fetchAnotherBox(currentDate);
+          final shouldContinue = await _fetchAnotherBox(currentDate);
           if (!shouldContinue) break;
         }
       }
 
-      if (startIndex >= itemList.length) {
-        _pagingCtl.appendLastPage(<Map<dynamic, dynamic>>[]);
-        return;
-      }
 
       final newItems = itemList
           .sublist(
@@ -110,7 +106,7 @@ class PagingListController extends GetxController {
         _pagingCtl.appendPage(newItems, pageKey + 1);
       }
     } catch (err) {
-      var msg = '_fetchPage ${err.toString()}';
+      final msg = '_fetchPage ${err.toString()}';
       HotMessage.showError(msg);
       _pagingCtl.error = err;
     }

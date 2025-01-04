@@ -30,7 +30,7 @@ class AppPackageNameManager {
 
   static Future<bool> clearAllAppNameCache() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var result = await prefs.remove(_allAppKey);
+    final result = await prefs.remove(_allAppKey);
     return result;
   }
 

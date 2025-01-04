@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:prj3/constant.dart';
@@ -32,12 +33,12 @@ class LogModel {
   }
 
   static Future<void> addLog(String logType, String message) async {
-    // TODO: disable logs for production
+    if (!kDebugMode) return;
     if (!Hive.isBoxOpen(AppConstants.logs)) {
-      var appDir = await getApplicationDocumentsDirectory();
+      final appDir = await getApplicationDocumentsDirectory();
       Hive.init(appDir.path);
     }
-    var logBox = Hive.isBoxOpen(AppConstants.logs)
+    final logBox = Hive.isBoxOpen(AppConstants.logs)
         ? Hive.box(AppConstants.logs)
         : await Hive.openBox(AppConstants.logs);
 

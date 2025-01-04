@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 
 class FilterController extends GetxController {
-  var searchParams = {}.obs; // Reactive variable to hold the user state
-  var isSearching = false.obs;
+  final searchParams = {}.obs; // Reactive finaliable to hold the user state
+  final isSearching = false.obs;
 
   String getSearchText() {
-    var searchText = searchParams['searchText'];
+    final searchText = searchParams['searchText'];
     if (searchText != null) {
       return searchText;
     }
@@ -13,7 +13,7 @@ class FilterController extends GetxController {
   }
 
   List<String> getSearchApps() {
-    var appPackageNames = searchParams['searchApps'];
+    final appPackageNames = searchParams['searchApps'];
     if (appPackageNames != null) {
       return appPackageNames;
     }
@@ -21,12 +21,12 @@ class FilterController extends GetxController {
   }
 
   DateTime? getStartDate() {
-    var startDate = searchParams['startDate'];
+    final startDate = searchParams['startDate'];
     return startDate;
   }
 
   DateTime? getEndDate() {
-    var endDate = searchParams['endDate'];
+    final endDate = searchParams['endDate'];
     return endDate;
   }
 

@@ -12,11 +12,11 @@ import 'dart:async';
 import 'package:prj3/utils/hot_message.dart';
 
 class NotificationController extends GetxController {
-  var notificationData = {}.obs;
-  var unreadNotifications = <dynamic>[].obs;
-  var readNotifications = <dynamic>[].obs;
-  var savedNotifications = <dynamic>[].obs;
-  var isLoading = false.obs;
+  final notificationData = {}.obs;
+  final unreadNotifications = <dynamic>[].obs;
+  final readNotifications = <dynamic>[].obs;
+  final savedNotifications = <dynamic>[].obs;
+  final isLoading = false.obs;
 
   final List<Map<String, dynamic>> _notificationQueue = [];
   late StreamSubscription _queueProcessor;
@@ -200,9 +200,9 @@ class NotificationController extends GetxController {
 
   Future<void> markAsRead(String notificationId, String notificationPostTime,
       {int? index}) async {
-    var box = await Hive.openBox(AppConstants.getHiveBoxName(
+    final box = await Hive.openBox(AppConstants.getHiveBoxName(
         date: DateTime.parse(notificationPostTime)));
-    var notification = box.get(notificationId);
+    final notification = box.get(notificationId);
     if (notification != null) {
       notification['status'] = 'read';
       notification['updatedAt'] = DateTime.now().toIso8601String();
@@ -222,9 +222,9 @@ class NotificationController extends GetxController {
   Future<void> saveNotification(
       String notificationId, String notificationPostTime,
       {int? index}) async {
-    var box = await Hive.openBox(AppConstants.getHiveBoxName(
+    final box = await Hive.openBox(AppConstants.getHiveBoxName(
         date: DateTime.parse(notificationPostTime)));
-    var notification = box.get(notificationId);
+    final notification = box.get(notificationId);
     if (notification != null) {
       notification['status'] = 'saved';
       notification['updatedAt'] = DateTime.now().toIso8601String();
@@ -244,9 +244,9 @@ class NotificationController extends GetxController {
   Future<void> unSaveNotification(
       String notificationId, String notificationPostTime,
       {int? index}) async {
-    var box = await Hive.openBox(AppConstants.getHiveBoxName(
+    final box = await Hive.openBox(AppConstants.getHiveBoxName(
         date: DateTime.parse(notificationPostTime)));
-    var notification = box.get(notificationId);
+    final notification = box.get(notificationId);
     if (notification != null) {
       notification['status'] = 'read';
       notification['updatedAt'] = DateTime.now().toIso8601String();
@@ -265,9 +265,9 @@ class NotificationController extends GetxController {
 
   Future<void> deleteNotification(
       String notificationId, String notificationPostTime) async {
-    var box = await Hive.openBox(AppConstants.getHiveBoxName(
+    final box = await Hive.openBox(AppConstants.getHiveBoxName(
         date: DateTime.parse(notificationPostTime)));
-    var notification = box.get(notificationId);
+    final notification = box.get(notificationId);
     if (notification != null) {
       notification['status'] = 'deleted';
       notification['updatedAt'] = DateTime.now().toIso8601String();
@@ -303,7 +303,7 @@ class NotificationController extends GetxController {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    var pastBox = await Hive.openBox(AppConstants.getHiveBoxName(date: time));
+    final pastBox = await Hive.openBox(AppConstants.getHiveBoxName(date: time));
     if (type == 'unread') {
       return {
         'list': pastBox.values
@@ -396,12 +396,12 @@ class NotificationController extends GetxController {
     DateTime currentDate = date ?? DateTime.now();
     Random rand = Random();
     int chosenOne = rand.nextInt(testSample.length);
-    var notification = deepClone(testSample[chosenOne]);
+    final notification = deepClone(testSample[chosenOne]);
     notification['notificationId'] =
         '${notification['packageName']}_${DateTime.now().toIso8601String()}';
     notification['postTime'] = currentDate.toIso8601String();
     notification['updatedAt'] = currentDate.toIso8601String();
-    var box =
+    final box =
         await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
     await box.put(notification['notificationId'], notification);
     await filterNotifications();

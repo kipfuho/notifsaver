@@ -50,7 +50,7 @@ class PlatformChannels {
 
   static Future<List<dynamic>>
       getUnprocessedNotificationsFromTempStorage() async {
-    var unprocessedNotifications = await notificationsChannel
+    final unprocessedNotifications = await notificationsChannel
         .invokeMethod('getUnprocessedNotificationsFromTempStorage');
     return unprocessedNotifications;
   }

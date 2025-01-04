@@ -1,9 +1,9 @@
 import 'package:prj3/controllers/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:prj3/utils/hot_message.dart';
 import 'package:prj3/pages/sign_in.dart';
 import 'package:flutter/material.dart';
+import 'package:prj3/jobs_inject.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
@@ -57,10 +57,7 @@ class ProfilePage extends StatelessWidget {
                   );
                   return;
                 }
-                Workmanager().registerOneOffTask(
-                  "4",
-                  "syncData",
-                );
+                syncData();
               },
               child: Obx(
                 () {

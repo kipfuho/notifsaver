@@ -489,7 +489,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   bool shouldReload(AppLocalizationDelegate old) => false;
 
   bool _isSupported(Locale locale) {
-    for (var supportedLocale in supportedLocales) {
+    for (final supportedLocale in supportedLocales) {
       if (supportedLocale.languageCode == locale.languageCode) {
         return true;
       }

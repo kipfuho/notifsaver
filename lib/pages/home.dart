@@ -34,31 +34,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Method to print all Hive data
   Future<void> printHiveData() async {
-    var currentDate = DateTime.now();
+    DateTime currentDate = DateTime.now();
     for (int i = 0; i < 5; i += 1) {
-      var box =
+      final box =
           await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
       currentDate = DateTime(
         currentDate.month == 1 ? currentDate.year - 1 : currentDate.year,
         currentDate.month == 1 ? 12 : currentDate.month - 1,
         currentDate.day,
       );
-      var keys = box.keys;
+      final keys = box.keys;
 
-      for (var key in keys) {
-        var value = box.get(key);
+      for (final key in keys) {
+        final value = box.get(key);
         print('Key: $key, Value: $value');
       }
     }
-
+    final box = await Hive.openBox(AppConstants.logs);
+    final keys = box.keys;
+    for (final key in keys) {
+      final value = box.get(key);
+      print('Key: $key, Value: $value');
+    }
     // await box.close();
   }
 
   // Method to delete the Hive box
   Future<void> deleteHiveBox() async {
-    var currentDate = DateTime.now();
+    DateTime currentDate = DateTime.now();
     for (int i = 0; i < 5; i += 1) {
-      var box =
+      final box =
           await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
       currentDate = DateTime(
         currentDate.month == 1 ? currentDate.year - 1 : currentDate.year,
@@ -185,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: printHiveData,
+                onPressed: () async => await printHiveData(),
                 child: const Text('Print Hive Data'),
               ),
               ElevatedButton(
@@ -200,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  var currentDate = DateTime.now();
+                  DateTime currentDate = DateTime.now();
                   currentDate = DateTime(
                     currentDate.month == 1
                         ? currentDate.year - 1

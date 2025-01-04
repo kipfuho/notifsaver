@@ -65,9 +65,9 @@ class GoogleService {
 
   Future<String> getFolderId(drive.DriveApi driveApi, String folderName) async {
     try {
-      var query =
+      final query =
           "mimeType='application/vnd.google-apps.folder' and name='$folderName' and trashed=false";
-      var fileList = await driveApi.files.list(q: query);
+      final fileList = await driveApi.files.list(q: query);
 
       if (fileList.files != null && fileList.files!.isNotEmpty) {
         return fileList.files!.first.id ?? 'root';
@@ -82,11 +82,11 @@ class GoogleService {
   Future<String> createFolder(
       drive.DriveApi driveApi, String folderName) async {
     try {
-      var folder = drive.File()
+      final folder = drive.File()
         ..name = folderName
         ..mimeType = "application/vnd.google-apps.folder";
 
-      var createdFolder = await driveApi.files.create(folder);
+      final createdFolder = await driveApi.files.create(folder);
       return createdFolder.id ?? 'root';
     } catch (e) {
       LogModel.logError("Error createFolder: $e");

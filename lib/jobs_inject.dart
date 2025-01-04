@@ -1,16 +1,17 @@
-import 'dart:io';
-import 'package:get/get.dart';
-import 'package:googleapis/drive/v3.dart' as drive;
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:prj3/constant.dart';
 import 'package:prj3/controllers/network_controller.dart';
 import 'package:prj3/controllers/user_controller.dart';
-import 'package:prj3/google_service.dart';
-import 'package:prj3/models/log_model.dart';
+import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:path_provider/path_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:prj3/platform_channel.dart';
+import 'package:prj3/models/log_model.dart';
+import 'package:prj3/google_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:prj3/constant.dart';
+import 'package:get/get.dart';
 import 'dart:convert';
+import 'dart:io';
 
 Future<void> _checkNetwork() async {
   NetworkController networkCtl;
@@ -32,13 +33,13 @@ Future<void> saveNotification() async {
 
   // Get the directory for storing Hive data
   if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
-    var appDir = await getApplicationDocumentsDirectory();
+    final appDir = await getApplicationDocumentsDirectory();
     Hive.init(appDir.path);
   }
-  var notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
+  final notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
   for (String notificationJson in unprocessedNotifications) {
     try {
-      var notification = jsonDecode(notificationJson);
+      final notification = jsonDecode(notificationJson);
       notification['postTime'] =
           DateTime.fromMillisecondsSinceEpoch(notification['postTime'])
               .toIso8601String();
@@ -72,22 +73,22 @@ Future<void> backupToDrive() async {
   await _checkNetwork();
 
   if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
-    var appDir = await getApplicationDocumentsDirectory();
+    final appDir = await getApplicationDocumentsDirectory();
     Hive.init(appDir.path);
   }
-  var notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
+  final notificationBox = await Hive.openBox(AppConstants.getHiveBoxName());
 
   // Get the previous month's box, to make sure no noti is missed
   DateTime now = DateTime.now();
   DateTime previousMonth = DateTime(now.year, now.month - 1);
-  var previousNotificationBox =
+  final previousNotificationBox =
       await Hive.openBox(AppConstants.getHiveBoxName(date: previousMonth));
 
   Map<String, dynamic> data = {
-    for (var item
+    for (final item
         in notificationBox.values.where((element) => element['backup'] != true))
       item['notificationId'].toString(): _convertToEncodable(item),
-    for (var item in previousNotificationBox.values
+    for (final item in previousNotificationBox.values
         .where((element) => element['backup'] != true))
       item['notificationId'].toString(): _convertToEncodable(item)
   };
@@ -105,12 +106,12 @@ Future<void> backupToDrive() async {
     throw Exception("Failed to authenticate with Google Drive API.");
   }
 
-  var fatherFolder = await googleService.getFolderId(driveApi, 'notifsaver');
-  var driveFile = drive.File()
+  final fatherFolder = await googleService.getFolderId(driveApi, 'notifsaver');
+  final driveFile = drive.File()
     ..name = "backup_notifications_${DateTime.now().toIso8601String()}.json"
     ..parents = [fatherFolder];
 
-  var fileMedia = drive.Media(
+  final fileMedia = drive.Media(
     backupFile.openRead(),
     await backupFile.length(),
   );
@@ -122,21 +123,24 @@ Future<void> backupToDrive() async {
 
   // Mark notifications as backed up
   for (Map<dynamic, dynamic> item in data.values) {
-    var notification = await notificationBox.get(item['notificationId']);
+    final notiBox = await Hive.openBox(
+        AppConstants.getHiveBoxName(date: DateTime.parse(item['updatedAt'])));
+    final notification = await notiBox.get(item['notificationId']);
     notification['backup'] = true;
     await notificationBox.put(item['notificationId'], notification);
   }
 }
 
 Future<void> deleteLogs() async {
-  // TODO: disable logs for production
+  if (!kDebugMode) return;
+
   await _checkNetwork();
 
   if (!Hive.isBoxOpen(AppConstants.logs)) {
-    var appDir = await getApplicationDocumentsDirectory();
+    final appDir = await getApplicationDocumentsDirectory();
     Hive.init(appDir.path);
   }
-  var logBox = Hive.isBoxOpen(AppConstants.logs)
+  final logBox = Hive.isBoxOpen(AppConstants.logs)
       ? Hive.box(AppConstants.logs)
       : await Hive.openBox(AppConstants.logs);
 
@@ -144,8 +148,8 @@ Future<void> deleteLogs() async {
   DateTime threshold = now.subtract(const Duration(days: 3));
 
   // Iterate through the logs and delete those older than 3 days
-  for (var key in logBox.keys) {
-    var log = logBox.get(key);
+  for (final key in logBox.keys) {
+    final log = logBox.get(key);
     if (log != null && log['timestamp'] != null) {
       DateTime logDate = DateTime.parse(log['timestamp']);
       if (logDate.isBefore(threshold)) {
@@ -156,52 +160,55 @@ Future<void> deleteLogs() async {
 }
 
 Future<void> syncData() async {
-  await _checkNetwork();
-
-  UserController userController;
+  UserController? userController;
   try {
     userController = Get.find();
   } catch (e) {
     userController = Get.put(UserController());
   }
-  userController.startSyncData();
+  userController?.startSyncData();
 
-  if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
-    var appDir = await getApplicationDocumentsDirectory();
-    Hive.init(appDir.path);
-  }
-
-  GoogleService googleService = GoogleService();
-  drive.DriveApi? driveApi = await googleService.getDriveApi();
-
-  if (driveApi == null) {
-    throw Exception("Failed to authenticate with Google Drive API.");
-  }
-
-  var fatherFolder = await googleService.getFolderId(driveApi, 'notifsaver');
-
-  // List all files in the folder
-  List<drive.File> files =
-      await googleService.listFilesInFolder(driveApi, fatherFolder);
-  for (var file in files) {
-    var media = await driveApi.files.get(file.id!,
-        downloadOptions: drive.DownloadOptions.fullMedia) as drive.Media;
-    var fileContent = await media.stream.transform(utf8.decoder).join();
-
-    // Parse the JSON content
-    Map<String, dynamic> jsonData = jsonDecode(fileContent);
-
-    // Search through the notifications
-    for (var notification in jsonData.values) {
-      DateTime updatedAt = DateTime.parse(notification['updatedAt']);
-      var notiBox =
-          await Hive.openBox(AppConstants.getHiveBoxName(date: updatedAt));
-      await notiBox.put(notification['notificationId'], notification);
+  try {
+    await _checkNetwork();
+    if (!Hive.isBoxOpen(AppConstants.getHiveBoxName())) {
+      final appDir = await getApplicationDocumentsDirectory();
+      Hive.init(appDir.path);
     }
-  }
 
-  await backupToDrive();
-  userController.finishSyncData();
+    GoogleService googleService = GoogleService();
+    drive.DriveApi? driveApi = await googleService.getDriveApi();
+
+    if (driveApi == null) {
+      throw Exception("Failed to authenticate with Google Drive API.");
+    }
+
+    final fatherFolder =
+        await googleService.getFolderId(driveApi, 'notifsaver');
+
+    // List all files in the folder
+    List<drive.File> files =
+        await googleService.listFilesInFolder(driveApi, fatherFolder);
+    for (final file in files) {
+      final media = await driveApi.files.get(file.id!,
+          downloadOptions: drive.DownloadOptions.fullMedia) as drive.Media;
+      final fileContent = await media.stream.transform(utf8.decoder).join();
+
+      // Parse the JSON content
+      Map<String, dynamic> jsonData = jsonDecode(fileContent);
+
+      // Search through the notifications
+      for (final notification in jsonData.values) {
+        DateTime updatedAt = DateTime.parse(notification['updatedAt']);
+        final notiBox =
+            await Hive.openBox(AppConstants.getHiveBoxName(date: updatedAt));
+        await notiBox.put(notification['notificationId'], notification);
+      }
+    }
+
+    await backupToDrive();
+  } finally {
+    userController?.finishSyncData();
+  }
 }
 
 void callbackDispatcher() {
