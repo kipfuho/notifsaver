@@ -110,7 +110,6 @@ class PagingListController extends GetxController {
       }
     } catch (err) {
       var msg = '_fetchPage ${err.toString()}';
-      print(msg);
       HotMessage.showError(msg);
       _pagingCtl.error = err;
     }

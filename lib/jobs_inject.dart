@@ -205,7 +205,6 @@ Future<void> syncData() async {
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    print("Background Task executing: $task");
     try {
       await LogModel.addLog(
           AppConstants.logInfo, "Background Task executing: $task");

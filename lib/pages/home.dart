@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> printHiveData() async {
     var currentDate = DateTime.now();
     for (int i = 0; i < 5; i += 1) {
-      print(AppConstants.getHiveBoxName(date: currentDate));
       var box =
           await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
       currentDate = DateTime(
@@ -58,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> deleteHiveBox() async {
     var currentDate = DateTime.now();
     for (int i = 0; i < 5; i += 1) {
-      print(AppConstants.getHiveBoxName(date: currentDate));
       var box =
           await Hive.openBox(AppConstants.getHiveBoxName(date: currentDate));
       currentDate = DateTime(
