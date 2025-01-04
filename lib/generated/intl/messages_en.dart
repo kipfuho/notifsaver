@@ -27,9 +27,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "channel_id": MessageLookupByLibrary.simpleMessage("Channel Id"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "last_modified_time":
+            MessageLookupByLibrary.simpleMessage("Last Modified Time"),
         "login": MessageLookupByLibrary.simpleMessage("Log in"),
         "login_google":
             MessageLookupByLibrary.simpleMessage("Log in with Google"),
+        "no_internet":
+            MessageLookupByLibrary.simpleMessage("Cannot connect to Internet"),
         "no_login":
             MessageLookupByLibrary.simpleMessage("Proceed without log in"),
         "no_notifications":
@@ -60,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "text": MessageLookupByLibrary.simpleMessage("Text"),
         "ticker_text": MessageLookupByLibrary.simpleMessage("Ticker Text"),
         "title": MessageLookupByLibrary.simpleMessage("Title"),
-        "unread": MessageLookupByLibrary.simpleMessage("Unsave")
+        "unread": MessageLookupByLibrary.simpleMessage("Unread"),
+        "unsave": MessageLookupByLibrary.simpleMessage("Unsave")
       };
 }

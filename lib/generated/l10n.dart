@@ -140,10 +140,10 @@ class S {
     );
   }
 
-  /// `Unsave`
+  /// `Unread`
   String get unread {
     return Intl.message(
-      'Unsave',
+      'Unread',
       name: 'unread',
       desc: '',
       args: [],
@@ -175,6 +175,16 @@ class S {
     return Intl.message(
       'Save',
       name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unsave`
+  String get unsave {
+    return Intl.message(
+      'Unsave',
+      name: 'unsave',
       desc: '',
       args: [],
     );
@@ -215,6 +225,16 @@ class S {
     return Intl.message(
       'Post Time',
       name: 'post_time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last Modified Time`
+  String get last_modified_time {
+    return Intl.message(
+      'Last Modified Time',
+      name: 'last_modified_time',
       desc: '',
       args: [],
     );
@@ -345,6 +365,16 @@ class S {
     return Intl.message(
       'Error',
       name: 'error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cannot connect to Internet`
+  String get no_internet {
+    return Intl.message(
+      'Cannot connect to Internet',
+      name: 'no_internet',
       desc: '',
       args: [],
     );

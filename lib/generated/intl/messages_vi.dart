@@ -27,9 +27,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "channel_id": MessageLookupByLibrary.simpleMessage("Id kênh"),
         "error": MessageLookupByLibrary.simpleMessage("Lỗi"),
         "home": MessageLookupByLibrary.simpleMessage("Trang chủ"),
+        "last_modified_time":
+            MessageLookupByLibrary.simpleMessage("Lần cuối chỉnh sửa"),
         "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
         "login_google":
             MessageLookupByLibrary.simpleMessage("Đăng nhập với Google"),
+        "no_internet":
+            MessageLookupByLibrary.simpleMessage("Không có kết nối Internet"),
         "no_login":
             MessageLookupByLibrary.simpleMessage("Tiếp tục mà không đăng nhập"),
         "no_notifications":
@@ -61,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "text": MessageLookupByLibrary.simpleMessage("Nội dung"),
         "ticker_text": MessageLookupByLibrary.simpleMessage("Nội dung cuộn"),
         "title": MessageLookupByLibrary.simpleMessage("Tiêu đề"),
-        "unread": MessageLookupByLibrary.simpleMessage("Bỏ lưu")
+        "unread": MessageLookupByLibrary.simpleMessage("Chưa đọc"),
+        "unsave": MessageLookupByLibrary.simpleMessage("Bỏ lưu")
       };
 }
