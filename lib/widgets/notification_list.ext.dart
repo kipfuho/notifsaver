@@ -11,6 +11,7 @@ class PagingListController extends GetxController {
   final FilterController _filterCtl = Get.find();
 
   PagingListController(this.notiType);
+  late final Worker everListener;
 
   @override
   void onInit() {
@@ -19,7 +20,7 @@ class PagingListController extends GetxController {
     itemList = _notiCtl.getNotificationList(notiType);
     currentListSize.value = itemList.length;
 
-    ever(itemList, (newList) {
+    everListener = ever(itemList, (newList) {
       if (_notiCtl.isLoading.value) {
         return;
       }
@@ -138,6 +139,7 @@ class PagingListController extends GetxController {
 
   @override
   void dispose() {
+    everListener.dispose();
     _pagingCtl.dispose();
     super.dispose();
   }

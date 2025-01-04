@@ -25,6 +25,7 @@ class _NotificationListState extends State<NotificationList>
   late final PagingListController _pListCtl;
   final NotificationController _notiCtl = Get.find();
   final FilterController _filterCtl = Get.find();
+  late final Worker everListener;
 
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _NotificationListState extends State<NotificationList>
     _pListCtl = Get.put(PagingListController(widget.notificationType),
         tag: widget.notificationType);
 
-    ever(
+    everListener = ever(
       _filterCtl.isSearching,
       (bool newIsSearching) async {
         await _notiCtl.filterNotifications(
@@ -48,6 +49,7 @@ class _NotificationListState extends State<NotificationList>
 
   @override
   void dispose() {
+    everListener.dispose();
     _pListCtl.dispose();
     super.dispose();
   }
