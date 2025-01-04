@@ -139,11 +139,12 @@ class NotificationController extends GetxController {
           DateTime.parse(notification['updatedAt']);
       if (startDate != null) {
         inSearchDateRange = notificationLastModifiedDate.isAfter(startDate) ||
-            notificationLastModifiedDate.isAtSameMomentAs(startDate);
+            notificationLastModifiedDate.toString() == startDate.toString();
       }
       if (endDate != null) {
-        inSearchDateRange = notificationLastModifiedDate.isBefore(endDate) ||
-            notificationLastModifiedDate.isAtSameMomentAs(endDate);
+        inSearchDateRange = inSearchDateRange &&
+            (notificationLastModifiedDate.isBefore(endDate) ||
+                notificationLastModifiedDate.toString() == endDate.toString());
       }
     }
 

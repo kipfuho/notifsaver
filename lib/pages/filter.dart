@@ -44,11 +44,14 @@ class _FilterScreenState extends State<FilterScreen> {
   }
 
   void applyFilter() {
+    DateTime? adjustedEndDate = endDate != null
+        ? DateTime(endDate!.year, endDate!.month, endDate!.day, 23, 59, 59)
+        : null;
     _filterController.setSearchParams(
       searchText: searchText,
       selectedApps: selectedApps.keys.toList(),
       startDate: startDate,
-      endDate: endDate,
+      endDate: adjustedEndDate,
     );
   }
 

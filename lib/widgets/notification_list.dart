@@ -36,6 +36,8 @@ class _NotificationListState extends State<NotificationList>
       _filterCtl.isSearching,
       (bool newIsSearching) async {
         if (newIsSearching) {
+          print(_filterCtl.searchParams['startDate']);
+          print(_filterCtl.searchParams['endDate']);
           await _notiCtl.filterNotifications(
             searchApps: _filterCtl.searchParams['searchApps'],
             searchText: _filterCtl.searchParams['searchText'],
