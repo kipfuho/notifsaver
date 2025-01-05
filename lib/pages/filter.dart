@@ -18,7 +18,7 @@ class _FilterScreenState extends State<FilterScreen> {
   final InstalledAppController _settingController = Get.find();
   final FilterController _filterController = Get.find();
   final selectedApps = <String, dynamic>{}.obs;
-  String searchText = '';
+  RxString searchText = ''.obs;
   DateTime? startDate;
   DateTime? endDate;
 
@@ -34,7 +34,7 @@ class _FilterScreenState extends State<FilterScreen> {
         selectedApps[appName] = true;
       }
       setState(() {
-        searchText = _filterController.getSearchText();
+        searchText.value = _filterController.getSearchText();
         startDate = _filterController.getStartDate();
         endDate = _filterController.getEndDate();
       });
@@ -49,7 +49,7 @@ class _FilterScreenState extends State<FilterScreen> {
         ? DateTime(endDate!.year, endDate!.month, endDate!.day, 23, 59, 59)
         : null;
     _filterController.setSearchParams(
-      searchText: searchText,
+      searchText: searchText.value,
       selectedApps: selectedApps.keys.toList(),
       startDate: startDate,
       endDate: adjustedEndDate,
@@ -90,11 +90,9 @@ class _FilterScreenState extends State<FilterScreen> {
                     name: 'search_notification'),
                 border: OutlineInputBorder(),
               ),
-              controller: TextEditingController(text: searchText),
+              controller: TextEditingController(text: searchText.value),
               onChanged: (value) {
-                setState(() {
-                  searchText = value;
-                });
+                searchText.value = value;
               },
             ),
             const SizedBox(height: 10),

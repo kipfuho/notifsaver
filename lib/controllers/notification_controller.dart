@@ -23,10 +23,10 @@ class NotificationController extends GetxController {
   late Box? notificationBox;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     _initNotificationBox();
-    _listenToNotificationStream();
+    await _listenToNotificationStream();
     _startQueueProcessor();
   }
 
@@ -48,7 +48,18 @@ class NotificationController extends GetxController {
     }
   }
 
-  void _listenToNotificationStream() {
+  Future<void> _listenToNotificationStream() async {
+    // Add all previously unprocessed notifications
+    final unprocessedNotifications =
+        await PlatformChannels.getUnprocessedNotificationsFromTempStorage();
+    for (String notificationJsonString in unprocessedNotifications) {
+      try {
+        final notificationJson = jsonDecode(notificationJsonString);
+        _addToQueue(deepClone(notificationJson));
+      } catch (err) {
+        HotMessage.showError(err.toString());
+      }
+    }
     PlatformChannels.notificationsEventChannel.receiveBroadcastStream().listen(
         (event) {
       try {
